@@ -22,43 +22,36 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
 | **Least Privilege (PoLP)** | **Advanced IAM: Custom Roles & Groups** | SOC2 (IAM), PCI-DSS (Req 7.1) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
-| **Detection Engineering** | **Security Data Lake (BigQuery SIEM)** | NIST CSF (DE.AE, DE.CM), SOC2 |
-| **Security Automation (SOAR)** | **Event-Driven Workflows** | NIST CSF (RS.RP), SOC2 (Ops) |
+| **Security Best Practices** | **Full Network Security Framework** | NIST CSF (All), CIS Benchmark |
 
 ---
 
 ## 🏗️ Portfolio Structure
 
-The repository is organized into five main domains:
+The repository is organized into six main domains:
 
 ### 1. Web Security (`/web-security`)
 *   **[OWASP Top 10 Lab](./web-security/owasp-top-10/README.md)**: Interactive demo of common vulnerabilities (SQLi, XSS, Broken Access Control) in Node.js with mitigations and Python PoC scripts.
 
 ### 2. Google Cloud Security (`/cloud-security/gcp`)
-*   **[IAM & Resource Access Management](./cloud-security/gcp/iam-hardening/README.md)**:
-    - **[Advanced IAM](./cloud-security/gcp/iam-hardening/resource-access-management/README.md)**: Custom Roles, Group-based access, and the Principle of Least Privilege (PoLP).
-    - **[Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**: Keyless CI/CD authentication.
+*   **[IAM & Resource Access Management](./cloud-security/gcp/iam-hardening/README.md)**: Custom Roles, Group-based access, and the Principle of Least Privilege (PoLP).
 *   **[Governance: Organization Policies](./cloud-security/gcp/governance/README.md)**: Enterprise-wide guardrails enforcing security standards.
-*   **[Network Security](./cloud-security/gcp/network-security/README.md)**:
-    - **[Cloud Firewall](./cloud-security/gcp/network-security/firewall-policies/README.md)**: Hierarchical Firewall Policies and Identity-based VPC rules.
-    - **[Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**: L7 protection with Rate Limiting and Adaptive Protection.
-    - **[Identity-Aware Proxy (IAP)](./cloud-security/gcp/network-security/zero-trust-iap/README.md)**: Zero Trust Access model with Context-Aware Access.
-    - **[VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**: Advanced data exfiltration protection and Bridge Perimeters.
-    - **[Cloud IDS](./cloud-security/gcp/network-security/cloud-ids/README.md)**: Managed Intrusion Detection & DPI (Palo Alto).
-    - **[Packet Mirroring](./cloud-security/gcp/network-security/packet-mirroring/README.md)**: Custom traffic analysis for Network Detection and Response (NDR).
-    - **[Secure Web Proxy (SWP)](./cloud-security/gcp/network-security/secure-web-proxy/README.md)**: Managed Egress security and FQDN filtering.
+*   **[Network Security](./cloud-security/gcp/network-security/README.md)**: Cloud Firewall, Cloud Armor WAF, IAP, VPC Service Controls, Cloud IDS, and Packet Mirroring.
 *   **[Incident Response: Self-Healing](./cloud-security/gcp/incident-response/README.md)**: Automated remediation of SCC findings.
 *   **[GKE Security: mTLS & Network Policies](./cloud-security/gcp/gke-security/README.md)**: Microservices security using Service Mesh (Istio/ASM).
 *   **[Data: Cloud DLP API](./cloud-security/gcp/data-security/cloud-dlp-demo/README.md)**: Automated PII identification and masking.
 
 ### 3. SecOps & Detection Engineering (`/secops`)
 *   **[Advanced SOAR Architecture](./secops/soar-architecture/README.md)**: Event-Driven Incident Response using **Google Cloud Workflows**.
-*   **[Security Data Lake & Detection Engineering](./secops/security-data-lake/README.md)**: Log aggregation (Audit, VPC, WAF) to **BigQuery** and SQL-based detection rules for finding Brute Force, Beaconing, and Data Exfiltration.
+*   **[Security Data Lake & Detection Engineering](./secops/security-data-lake/README.md)**: Log aggregation and SQL-based detection rules in **BigQuery**.
 
 ### 4. DevSecOps & CI/CD (`/devsecops`)
 *   **[GitHub Actions Security](./devsecops/github-actions/full-pipeline-demo/README.md)**: "Golden Path" pipeline with Gitleaks, Checkov, and Trivy.
 *   **[GitLab CI Security](./devsecops/gitlab-ci/README.md)**: Leveraging native GitLab scanners (SAST, Secret Detection).
 *   **[GCP Native: Supply Chain Security](./devsecops/gcp-native-security/README.md)**: Securing the container lifecycle.
+
+### 5. Best Practices (`/best-practices`)
+*   **[Network Security Framework](./best-practices/network/TOC.md)**: A comprehensive set of 10 structured best practices for enterprise GCP network security, from **Zero Trust** to **IaC Automation**.
 
 ---
 
