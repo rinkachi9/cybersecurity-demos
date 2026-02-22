@@ -17,12 +17,14 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Internal Traffic Encryption** | **GKE Service Mesh (mTLS)** | PCI-DSS (Req 4.1), HIPAA |
 | **Zero Trust Access** | **Identity-Aware Proxy (IAP)** | SOC2 (Access Control), NIST SP 800-207 |
 | **Automated Governance** | **Organization Policies** (Guardrails) | CIS GCP Benchmark (v2.0) |
+| **Enterprise Firewall** | **Cloud Firewall (Hierarchical Policies)** | PCI-DSS (Req 1.2), NIST CSF (PR.AC) |
 | **Intrusion Detection (DPI)** | **Cloud IDS (Palo Alto Powered)** | SOC2 (Monitor), PCI-DSS (Req 11.4) |
 | **Traffic Mirroring (NDR)** | **Packet Mirroring (Custom Analysis)** | PCI-DSS (Req 11.4), SOC2 |
 | **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
 | **Least Privilege (PoLP)** | **Advanced IAM: Custom Roles & Groups** | SOC2 (IAM), PCI-DSS (Req 7.1) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
-| **Security Best Practices** | **Full Network Security Framework** | NIST CSF (All), CIS Benchmark |
+| **Detection Engineering** | **Security Data Lake (BigQuery SIEM)** | NIST CSF (DE.AE, DE.CM), SOC2 |
+| **Security Automation (SOAR)** | **Event-Driven Workflows** | NIST CSF (RS.RP), SOC2 (Ops) |
 
 ---
 
@@ -51,7 +53,9 @@ The repository is organized into six main domains:
 *   **[GCP Native: Supply Chain Security](./devsecops/gcp-native-security/README.md)**: Securing the container lifecycle.
 
 ### 5. Best Practices (`/best-practices`)
-*   **[Network Security Framework](./best-practices/network/TOC.md)**: A comprehensive set of 10 structured best practices for enterprise GCP network security, from **Zero Trust** to **IaC Automation**.
+*   **[Network Security Framework](./best-practices/network/TOC.md)**: A comprehensive set of 10 structured best practices for enterprise GCP network security.
+*   **[IAM Security Framework](./best-practices/iam/TOC.md)**: Best practices for managing identities, least privilege, and conditional access.
+*   **[Data Security Framework](./best-practices/data/TOC.md)**: Best practices for data classification, encryption, and protection.
 
 ---
 
