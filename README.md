@@ -22,12 +22,14 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
 | **Least Privilege (PoLP)** | **Advanced IAM: Custom Roles & Groups** | SOC2 (IAM), PCI-DSS (Req 7.1) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
+| **Detection Engineering** | **Security Data Lake (BigQuery SIEM)** | NIST CSF (DE.AE, DE.CM), SOC2 |
+| **Security Automation (SOAR)** | **Event-Driven Workflows** | NIST CSF (RS.RP), SOC2 (Ops) |
 
 ---
 
 ## 🏗️ Portfolio Structure
 
-The repository is organized into four main domains:
+The repository is organized into five main domains:
 
 ### 1. Web Security (`/web-security`)
 *   **[OWASP Top 10 Lab](./web-security/owasp-top-10/README.md)**: Interactive demo of common vulnerabilities (SQLi, XSS, Broken Access Control) in Node.js with mitigations and Python PoC scripts.
@@ -49,7 +51,11 @@ The repository is organized into four main domains:
 *   **[GKE Security: mTLS & Network Policies](./cloud-security/gcp/gke-security/README.md)**: Microservices security using Service Mesh (Istio/ASM).
 *   **[Data: Cloud DLP API](./cloud-security/gcp/data-security/cloud-dlp-demo/README.md)**: Automated PII identification and masking.
 
-### 3. DevSecOps & CI/CD (`/devsecops`)
+### 3. SecOps & Detection Engineering (`/secops`)
+*   **[Advanced SOAR Architecture](./secops/soar-architecture/README.md)**: Event-Driven Incident Response using **Google Cloud Workflows**.
+*   **[Security Data Lake & Detection Engineering](./secops/security-data-lake/README.md)**: Log aggregation (Audit, VPC, WAF) to **BigQuery** and SQL-based detection rules for finding Brute Force, Beaconing, and Data Exfiltration.
+
+### 4. DevSecOps & CI/CD (`/devsecops`)
 *   **[GitHub Actions Security](./devsecops/github-actions/full-pipeline-demo/README.md)**: "Golden Path" pipeline with Gitleaks, Checkov, and Trivy.
 *   **[GitLab CI Security](./devsecops/gitlab-ci/README.md)**: Leveraging native GitLab scanners (SAST, Secret Detection).
 *   **[GCP Native: Supply Chain Security](./devsecops/gcp-native-security/README.md)**: Securing the container lifecycle.
@@ -60,7 +66,7 @@ The repository is organized into four main domains:
 *   **Cloud Platform**: Google Cloud Platform (GCP)
 *   **Infrastructure as Code**: Terraform, OpenTofu
 *   **Languages**: Python, Node.js, Bash, YAML, SQL, HCL
-*   **Security Tools**: Cloud Armor, Cloud IDS, Cloud DLP, IAP, VPC SC, SWP, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC.
+*   **Security Tools**: Cloud Armor, Cloud IDS, Cloud DLP, IAP, VPC SC, SWP, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC, Cloud Workflows, BigQuery.
 
 ---
 *Author: RINKACHI*
