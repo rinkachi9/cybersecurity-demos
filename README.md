@@ -17,6 +17,7 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Internal Traffic Encryption** | **GKE Service Mesh (mTLS)** | PCI-DSS (Req 4.1), HIPAA |
 | **Zero Trust Access** | **Identity-Aware Proxy (IAP)** | SOC2 (Access Control), NIST SP 800-207 |
 | **Automated Governance** | **Organization Policies** (Guardrails) | CIS GCP Benchmark (v2.0) |
+| **Enterprise Firewall** | **Cloud Firewall (Hierarchical Policies)** | PCI-DSS (Req 1.2), NIST CSF (PR.AC) |
 | **Intrusion Detection (DPI)** | **Cloud IDS (Palo Alto Powered)** | SOC2 (Monitor), PCI-DSS (Req 11.4) |
 | **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
 | **Least Privilege (PoLP)** | **Advanced IAM: Custom Roles & Groups** | SOC2 (IAM), PCI-DSS (Req 7.1) |
@@ -37,6 +38,7 @@ The repository is organized into four main domains:
     - **[Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**: Keyless CI/CD authentication.
 *   **[Governance: Organization Policies](./cloud-security/gcp/governance/README.md)**: Enterprise-wide guardrails enforcing security standards.
 *   **[Network Security](./cloud-security/gcp/network-security/README.md)**:
+    - **[Cloud Firewall](./cloud-security/gcp/network-security/firewall-policies/README.md)**: Hierarchical Firewall Policies and Identity-based VPC rules.
     - **[Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**: L7 protection with Rate Limiting.
     - **[Identity-Aware Proxy (IAP)](./cloud-security/gcp/network-security/zero-trust-iap/README.md)**: Zero Trust Access model.
     - **[VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**: Advanced data exfiltration protection.
