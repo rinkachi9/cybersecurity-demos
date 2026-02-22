@@ -1,0 +1,37 @@
+# Kubernetes NetworkPolicy (GKE)
+# This policy restricts traffic to the 'backend' pods.
+# Only 'frontend' pods are allowed to connect on port 8080.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-frontend-to-backend
+  namespace: production
+spec:
+  podSelector:
+    matchLabels:
+      app: backend
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: frontend
+    ports:
+    - protocol: TCP
+      port: 8080
+
+---
+# Default Deny-All Ingress Policy
+# The most secure way to start: block everything and whitelist only what is needed.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress

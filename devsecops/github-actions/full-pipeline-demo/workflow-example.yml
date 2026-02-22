@@ -1,0 +1,53 @@
+name: DevSecOps "Golden Path" Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # 1. Secret Scanning - Catch secrets before they are committed
+  secret-scan:
+    name: Secret Scanning (Gitleaks)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks Scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # 2. Infrastructure as Code (IaC) Scan
+  iac-scan:
+    name: IaC Security (Checkov)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkov GitHub Action
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: .
+          framework: terraform
+          soft_fail: false # Pipeline fails if high-severity issues found
+
+  # 3. Static Analysis (SAST) & Dependency Scan
+  software-scan:
+    name: Software Security (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy vulnerability scanner in repo mode
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          ignore-unfixed: true
+          format: 'table'
+          severity: 'HIGH,CRITICAL'
+
+  # 4. Build & Container Scan (If applicable)
+  # container-scan:
+  #   needs: [secret-scan, iac-scan, software-scan]
+  #   ...

@@ -1,0 +1,36 @@
+# GitLab CI Security Baseline Template
+# This template integrates native GitLab security features and open-source alternatives.
+
+include:
+  - template: Jobs/SAST.gitlab-ci.yml
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  - template: Jobs/Container-Scanning.gitlab-ci.yml
+
+variables:
+  SECURE_LOG_LEVEL: "info"
+
+# Customizing SAST to fail on vulnerabilities (optional)
+sast:
+  variables:
+    SAST_EXCLUDED_PATHS: "tests/*"
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+
+# Alternative for Free Tier: Using Trivy for Dependency & Image Scanning
+trivy_scan:
+  stage: test
+  image: 
+    name: aquasec/trivy:latest
+    entrypoint: [""]
+  script:
+    - trivy fs --exit-code 1 --severity HIGH,CRITICAL .
+  rules:
+    - if: $CI_COMMIT_BRANCH == "main"
+
+# Secret Detection Customization
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "false"
+  allow_failure: false # Stop the pipeline if secrets are found

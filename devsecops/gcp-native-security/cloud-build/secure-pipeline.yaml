@@ -1,0 +1,27 @@
+# GCP Native CI/CD: Secure Cloud Build Pipeline
+# This demo shows how to run security checks directly in Google Cloud Build.
+
+steps:
+  # 1. Build the Docker Image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA', '.']
+
+  # 2. Run Vulnerability Scan (Trivy)
+  - name: 'aquasec/trivy:latest'
+    args: ['image', '--severity', 'HIGH,CRITICAL', '--exit-code', '1', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA']
+    # Pipeline will fail here if high-severity vulnerabilities are found.
+
+  # 3. Push the Image if Scan Passed
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA']
+
+  # 4. Optional: Create Binary Authorization Attestation (if successful)
+  # - name: 'gcr.io/cloud-builders/gcloud'
+  #   args: ['container', 'binauthz', 'attestations', 'create', ...]
+
+images:
+  - 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: 'ALLOW_LOOSE'

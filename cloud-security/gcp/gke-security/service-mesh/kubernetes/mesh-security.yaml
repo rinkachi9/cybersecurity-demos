@@ -1,0 +1,55 @@
+# Service Mesh Security: mTLS and Identity-based Authorization
+
+# 1. PeerAuthentication: Enforce STRICT mTLS
+# This policy forces all services in the 'production' namespace to use mTLS.
+# Any plaintext traffic (without a valid certificate) will be rejected.
+
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default-mtls-strict
+  namespace: production
+spec:
+  mtls:
+    mode: STRICT
+
+---
+# 2. AuthorizationPolicy: Access Control based on Identity (not just IP)
+# This policy allows ONLY the 'frontend' service to call the 'backend' service.
+# Uses 'requestPrincipal' or 'source.principal' based on Workload Identity.
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: allow-frontend-to-backend-only
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        principals: ["cluster.local/ns/production/sa/frontend-service-account"]
+    to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths: ["/api/v1/data"]
+
+---
+# 3. RequestAuthentication: JWT Token Verification
+# This policy ensures that incoming requests have a valid JWT token.
+
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-verify-frontend
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+  jwtRules:
+  - issuer: "https://accounts.google.com"
+    jwksUri: "https://www.googleapis.com/oauth2/v3/certs"

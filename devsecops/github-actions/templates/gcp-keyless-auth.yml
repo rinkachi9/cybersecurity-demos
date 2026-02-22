@@ -1,0 +1,30 @@
+name: GCP Keyless Auth Demo
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  gcp-auth:
+    runs-on: ubuntu-latest
+    # Add permissions for the OIDC token
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        workload_identity_provider: 'projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/github-actions-pool/providers/github-provider'
+        service_account: 'github-actions-automation@YOUR_PROJECT_ID.iam.gserviceaccount.com'
+
+    - name: 'Set up Cloud SDK'
+      uses: 'google-github-actions/setup-gcloud@v2'
+
+    - name: 'Use gcloud CLI'
+      run: 'gcloud auth list'
