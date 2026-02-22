@@ -17,6 +17,7 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Internal Traffic Encryption** | **GKE Service Mesh (mTLS)** | PCI-DSS (Req 4.1), HIPAA |
 | **Zero Trust Access** | **Identity-Aware Proxy (IAP)** | SOC2 (Access Control), NIST SP 800-207 |
 | **Automated Governance** | **Organization Policies** (Guardrails) | CIS GCP Benchmark (v2.0) |
+| **Intrusion Detection (DPI)** | **Cloud IDS (Palo Alto Powered)** | SOC2 (Monitor), PCI-DSS (Req 11.4) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
 
 ---
@@ -31,10 +32,12 @@ The repository is organized into four main domains:
 ### 2. Google Cloud Security (`/cloud-security/gcp`)
 *   **[IAM: Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**: Secure CI/CD authentication without static JSON keys.
 *   **[Governance: Organization Policies](./cloud-security/gcp/governance/README.md)**: Enterprise-wide guardrails enforcing security standards.
-*   **[Network: Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**: L7 protection with Rate Limiting for Cloud Run applications.
-*   **[Network: Identity-Aware Proxy (IAP)](./cloud-security/gcp/network-security/zero-trust-iap/README.md)**: Zero Trust Access model without a VPN.
-*   **[Network: VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**: Advanced data exfiltration protection ("Golden Cage").
-*   **[Incident Response: Self-Healing](./cloud-security/gcp/incident-response/README.md)**: Automated remediation of SCC findings (e.g., auto-closing public GCS buckets).
+*   **[Network Security](./cloud-security/gcp/network-security/README.md)**:
+    - **[Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**: L7 protection with Rate Limiting.
+    - **[Identity-Aware Proxy (IAP)](./cloud-security/gcp/network-security/zero-trust-iap/README.md)**: Zero Trust Access model.
+    - **[VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**: Advanced data exfiltration protection.
+    - **[Cloud IDS](./cloud-security/gcp/network-security/cloud-ids/README.md)**: Managed Intrusion Detection & DPI (Palo Alto).
+*   **[Incident Response: Self-Healing](./cloud-security/gcp/incident-response/README.md)**: Automated remediation of SCC findings.
 *   **[GKE Security: mTLS & Network Policies](./cloud-security/gcp/gke-security/README.md)**: Microservices security using Service Mesh (Istio/ASM).
 *   **[Data: Cloud DLP API](./cloud-security/gcp/data-security/cloud-dlp-demo/README.md)**: Automated PII identification and masking.
 
@@ -49,16 +52,7 @@ The repository is organized into four main domains:
 *   **Cloud Platform**: Google Cloud Platform (GCP)
 *   **Infrastructure as Code**: Terraform, OpenTofu
 *   **Languages**: Python, Node.js, Bash, YAML, SQL, HCL
-*   **Security Tools**: Cloud Armor, Cloud DLP, IAP, VPC SC, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC.
-
----
-
-## 🚀 How to use this repository?
-Each module contains a dedicated **`README.md`** file that guides you through:
-1.  **Risk Analysis**: Explanation of the attack vector and business impact.
-2.  **Defense Strategy**: Rationale behind the defensive mechanisms (e.g., why mTLS over IP-filtering).
-3.  **Implementation**: Ready-to-deploy code (IaC / Code).
-4.  **Verification**: Instructions on how to verify the security controls.
+*   **Security Tools**: Cloud Armor, Cloud IDS, Cloud DLP, IAP, VPC SC, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC.
 
 ---
 *Author: RINKACHI*
