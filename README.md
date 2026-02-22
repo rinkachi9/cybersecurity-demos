@@ -18,6 +18,7 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Zero Trust Access** | **Identity-Aware Proxy (IAP)** | SOC2 (Access Control), NIST SP 800-207 |
 | **Automated Governance** | **Organization Policies** (Guardrails) | CIS GCP Benchmark (v2.0) |
 | **Intrusion Detection (DPI)** | **Cloud IDS (Palo Alto Powered)** | SOC2 (Monitor), PCI-DSS (Req 11.4) |
+| **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
 
 ---
@@ -37,6 +38,7 @@ The repository is organized into four main domains:
     - **[Identity-Aware Proxy (IAP)](./cloud-security/gcp/network-security/zero-trust-iap/README.md)**: Zero Trust Access model.
     - **[VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**: Advanced data exfiltration protection.
     - **[Cloud IDS](./cloud-security/gcp/network-security/cloud-ids/README.md)**: Managed Intrusion Detection & DPI (Palo Alto).
+    - **[Secure Web Proxy (SWP)](./cloud-security/gcp/network-security/secure-web-proxy/README.md)**: Managed Egress security and FQDN filtering.
 *   **[Incident Response: Self-Healing](./cloud-security/gcp/incident-response/README.md)**: Automated remediation of SCC findings.
 *   **[GKE Security: mTLS & Network Policies](./cloud-security/gcp/gke-security/README.md)**: Microservices security using Service Mesh (Istio/ASM).
 *   **[Data: Cloud DLP API](./cloud-security/gcp/data-security/cloud-dlp-demo/README.md)**: Automated PII identification and masking.
@@ -52,7 +54,7 @@ The repository is organized into four main domains:
 *   **Cloud Platform**: Google Cloud Platform (GCP)
 *   **Infrastructure as Code**: Terraform, OpenTofu
 *   **Languages**: Python, Node.js, Bash, YAML, SQL, HCL
-*   **Security Tools**: Cloud Armor, Cloud IDS, Cloud DLP, IAP, VPC SC, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC.
+*   **Security Tools**: Cloud Armor, Cloud IDS, Cloud DLP, IAP, VPC SC, SWP, Istio/ASM, Gitleaks, Checkov, Trivy, OWASP ZAP, Binary Authorization, SCC.
 
 ---
 *Author: RINKACHI*
