@@ -19,6 +19,7 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 | **Automated Governance** | **Organization Policies** (Guardrails) | CIS GCP Benchmark (v2.0) |
 | **Intrusion Detection (DPI)** | **Cloud IDS (Palo Alto Powered)** | SOC2 (Monitor), PCI-DSS (Req 11.4) |
 | **Egress Filtering (FQDN)** | **Secure Web Proxy (SWP)** | PCI-DSS (Req 1.2.1), NIST CSF (PR.AC) |
+| **Least Privilege (PoLP)** | **Advanced IAM: Custom Roles & Groups** | SOC2 (IAM), PCI-DSS (Req 7.1) |
 | **Incident Response** | **Self-Healing Incident Response** | NIST CSF (RS.RP, RS.AN) |
 
 ---
@@ -28,10 +29,12 @@ As a Senior Security Architect, I emphasize aligning technical solutions with sp
 The repository is organized into four main domains:
 
 ### 1. Web Security (`/web-security`)
-*   **[OWASP Top 10 Lab](./web-security/owasp-top-10/README.md)**: Interactive demo of common vulnerabilities (SQLi, XSS, Broken Access Control) in Node.js with mitigations and Python PoC scripts.
+*   **[OWASP Top 10 Lab](./web-security/owasp-top-10/README.md)**: Interactive demo of common vulnerabilities (SQLi, XSS, Broken Access Control) in Node.js with mitygations and Python PoC scripts.
 
 ### 2. Google Cloud Security (`/cloud-security/gcp`)
-*   **[IAM: Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**: Secure CI/CD authentication without static JSON keys.
+*   **[IAM & Resource Access Management](./cloud-security/gcp/iam-hardening/README.md)**:
+    - **[Advanced IAM](./cloud-security/gcp/iam-hardening/resource-access-management/README.md)**: Custom Roles, Group-based access, and the Principle of Least Privilege (PoLP).
+    - **[Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**: Keyless CI/CD authentication.
 *   **[Governance: Organization Policies](./cloud-security/gcp/governance/README.md)**: Enterprise-wide guardrails enforcing security standards.
 *   **[Network Security](./cloud-security/gcp/network-security/README.md)**:
     - **[Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**: L7 protection with Rate Limiting.
@@ -46,7 +49,7 @@ The repository is organized into four main domains:
 ### 3. DevSecOps & CI/CD (`/devsecops`)
 *   **[GitHub Actions Security](./devsecops/github-actions/full-pipeline-demo/README.md)**: "Golden Path" pipeline with Gitleaks, Checkov, and Trivy.
 *   **[GitLab CI Security](./devsecops/gitlab-ci/README.md)**: Leveraging native GitLab scanners (SAST, Secret Detection).
-*   **[GCP Native: Supply Chain Security](./devsecops/gcp-native-security/README.md)**: Securing the container lifecycle (Artifact Registry Scanning, Binary Authorization).
+*   **[GCP Native: Supply Chain Security](./devsecops/gcp-native-security/README.md)**: Securing the container lifecycle.
 
 ---
 
