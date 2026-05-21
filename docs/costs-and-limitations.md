@@ -19,7 +19,7 @@ This repository contains local demos, Terraform baselines, and cloud architectur
 
 ## Current limitations
 
-- Several older Terraform modules are still demonstrational and contain placeholders until promoted through Stage 3.
+- Terraform modules are maintained as static baselines; deployed validation still requires isolated runtime execution and redacted evidence.
 - Runtime evidence is intentionally not committed unless it is redacted and reproducible.
 - GCP deployment has not been performed for every module.
 - Some controls require organization-level permissions that are not available in every test project.

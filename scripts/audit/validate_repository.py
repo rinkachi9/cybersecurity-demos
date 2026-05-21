@@ -27,7 +27,6 @@ EXCLUDED_DIRS = {
 REQUIRED_FILES = [
     "README.md",
     "context.md",
-    "ROADMAP.md",
     "docs/project-assessment.md",
     "docs/module-standard.md",
     "docs/module-status.md",
@@ -245,7 +244,7 @@ def check_terraform_structure(root: Path) -> CheckResult:
 
         combined = "\n".join(path.read_text(encoding="utf-8") for path in sorted(directory.glob("*.tf")))
         if "YOUR_" in combined or "yourdomain.com" in combined or "your-" in combined:
-            warnings.append(f"{rel(root, directory)}: demo placeholders remain; migrate to variables in roadmap stage 3")
+            warnings.append(f"{rel(root, directory)}: demo placeholders remain; migrate to variables per module standard")
         if "required_providers" not in combined:
             warnings.append(f"{rel(root, directory)}: required_providers not declared yet")
 

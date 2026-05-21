@@ -17,7 +17,6 @@ Repository validation passed.
 Known local warning:
 
 - JavaScript syntax validation is skipped when `node` is not installed.
-- Older Terraform demo modules may still warn about placeholders or missing provider declarations until they are promoted through Stage 3.
 
 ## SOAR dry-run
 

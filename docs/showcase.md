@@ -36,7 +36,7 @@ Goal: show technical depth without requiring live cloud deployment.
 
 | Time | Topic | Proof |
 | --- | --- | --- |
-| 0-5 min | Repository operating model and maturity roadmap | `ROADMAP.md`, `docs/module-standard.md` |
+| 0-5 min | Repository operating model and final baseline | `docs/final-acceptance.md`, `docs/module-standard.md`, `docs/module-status.md` |
 | 5-12 min | OWASP lab: exploit expectations and secure mode | PoC script, health endpoint, IDOR scenario |
 | 12-20 min | Keyless cloud access and edge controls | WIF Terraform, Cloud Armor WAF Terraform, Cloud Run Edge Terraform, architecture diagram |
 | 20-26 min | Detection engineering and SOAR dry-run | Security Data Lake Terraform, detection folders, sample events, expected results, local dry-run test |
@@ -87,8 +87,8 @@ Goal: let a senior reviewer inspect tradeoffs, limitations, and operational read
 | AppSec | OWASP lab control design, expected exploit results, secure mode criteria |
 | SecOps | detection metadata, false positives, tuning, MITRE mapping, dry-run response |
 | DevSecOps | provenance, SBOM, vulnerability gates, CODEOWNERS, no static cloud keys |
-| Governance | module standard, roadmap, evidence expectations, quality gate |
-| Risks | cost limits, cloud deployment assumptions, placeholder Terraform backlog |
+| Governance | module standard, final acceptance, evidence expectations, quality gate |
+| Risks | cost limits, cloud deployment assumptions, runtime evidence boundary |
 
 ## Interview narrative
 

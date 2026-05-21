@@ -13,7 +13,7 @@ Obecne repozytorium zawiera:
 - SecOps: Security Data Lake w BigQuery, detection SQL oraz SOAR oparty o Workflows, Pub/Sub i Cloud Functions.
 - DevSecOps: przyklady GitHub Actions, GitLab CI i Cloud Build.
 - Best practices: materialy dla IAM, network security i data security.
-- Portfolio governance: roadmap, module standard, status matrix, showcase, evidence matrix, demo script, quickstart i ADR-y.
+- Portfolio governance: final acceptance, module standard, status matrix, showcase, evidence matrix, demo script, quickstart i ADR-y.
 - Productized reusable controls: Workload Identity Federation, Secure Cloud Run Edge, Cloud Armor WAF, VPC Service Controls, Cloud IDS, Packet Mirroring, Secure Web Proxy, Zero Trust IAP, Cloud DLP, GKE Service Mesh, Organization Policies, Resource Access Management, SOAR, GCP Native Supply Chain oraz Security Data Lake baseline.
 
 ## Mocne strony
@@ -24,9 +24,8 @@ Obecne repozytorium zawiera:
 - Mapowanie na standardy compliance w README.
 - Dobre tematy portfolio senior/architect: Security Data Lake, GCP-native SOAR, Binary Authorization, Cloud IDS, Secure Web Proxy.
 
-## Najwazniejsze luki
+## Pozostale luki operacyjne
 
-- Czesc starszych modulow Terraform nadal uzywa placeholderow i czeka na pelna strukture produkcyjna.
 - Czesc przykladow nie ma jeszcze runtime evidence z izolowanego projektu GCP.
 - OWASP lab ma warsztatowy baseline, ale wymaga jeszcze ZAP evidence i ASVS route-level mapping.
 - Cloud IDS, Secure Web Proxy, GKE i VPC Service Controls wymagaja ostroznego testowania kosztow i blast radius.
@@ -57,7 +56,6 @@ Najlepsza sciezka to nie poszerzanie zakresu, tylko podniesienie jakosci istniej
 
 - GCP demo moze generowac koszty, jezeli nie bedzie modulow cleanup i cost notes.
 - Mechanizmy typu VPC Service Controls, Cloud IDS i Secure Web Proxy moga blokowac srodowisko testowe przy nieostroznej konfiguracji.
-- Placeholdery w Terraform moga sugerowac niedojrzalosc, jezeli nie zostana zastapione zmiennymi i walidacja.
 - Brak pinned versions w pipeline'ach moze wygladac slabo w projekcie supply-chain security.
 
 ## Aktualna decyzja

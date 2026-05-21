@@ -8,9 +8,8 @@ Welcome to the **Cybersecurity Demos** repository. This is a comprehensive portf
 
 ## Project Operating Model
 
-This repository is being developed as an executable expert portfolio, not only a documentation collection. The current roadmap and quality standards are tracked here:
+This repository is maintained as an executable expert portfolio, not only a documentation collection. The final baseline and quality standards are tracked here:
 
-*   **[Expert Roadmap](./ROADMAP.md)**: staged plan for taking the project from advanced demo collection to expert-grade security engineering portfolio.
 *   **[Project Assessment](./docs/project-assessment.md)**: current-state analysis, strengths, gaps, risks, and prioritization.
 *   **[Module Standard](./docs/module-standard.md)**: target structure and readiness criteria for every demo module.
 *   **[Module Status Matrix](./docs/module-status.md)**: current maturity and next expert upgrade for each module.

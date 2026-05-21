@@ -41,7 +41,7 @@ SOAR dry-run checks passed.
 
 Open:
 
-- [Expert Roadmap](../ROADMAP.md)
+- [Final Acceptance](./final-acceptance.md)
 - [Module Standard](./module-standard.md)
 - [Module Status Matrix](./module-status.md)
 
