@@ -1,24 +1,42 @@
-# GKE Security: Network Segmentation & Hardening
+# GKE Security: Network Segmentation and Hardening
 
-W środowiskach kontenerowych (Kubernetes), domyślna konfiguracja sieci często pozwala na swobodną komunikację między wszystkimi Podami. W przypadku przejęcia jednego kontenera, atakujący może łatwo skanować i atakować inne usługi wewnątrz klastra (Lateral Movement).
+In Kubernetes environments, the default network posture often allows broad pod-to-pod communication. If one container is compromised, an attacker may scan services, access internal APIs, and move laterally inside the cluster. GKE hardening should combine network policies, workload identity, admission controls, image integrity, and runtime visibility.
 
-## 🛡️ Kluczowe mechanizmy obronne
+## Key defensive mechanisms
 
-### 1. Network Policies (L3/L4 Firewall)
-- **Problem**: "Flat network" wewnątrz klastra.
-- **Rozwiązanie**: Zastosowanie polityk `NetworkPolicy`.
-- **Demo**: W załączonym pliku `example-policies.yaml` pokazujemy podejście **Default Deny**, gdzie ruch jest blokowany domyślnie, a otwierane są tylko konkretne ścieżki (np. tylko `frontend` może rozmawiać z `backend` na porcie 8080).
+### 1. Network Policies
 
-### 2. Binary Authorization (Supply Chain Security)
-- Mechanizm GKE, który pozwala na uruchamianie tylko podpisanych i zweryfikowanych obrazów kontenerów. Zapobiega to uruchomieniu złośliwego kodu przez nieautoryzowane osoby.
+- **Problem**: a flat cluster network allows unnecessary communication between workloads.
+- **Control**: Kubernetes `NetworkPolicy` resources restrict ingress and egress at L3/L4.
+- **Demo**: [example-policies.yaml](./network-policies/example-policies.yaml) shows a default-deny approach where traffic is blocked by default and only specific paths are opened, for example `frontend` to `backend` on port 8080.
 
-### 3. Workload Identity (IAM for Pods)
-- Pody nie powinny używać statycznych kluczy JSON. Workload Identity pozwala przypisać tożsamość IAM bezpośrednio do Kubernetes Service Account.
+### 2. Binary Authorization
 
-## 🛠️ Jak wdrożyć Network Policies?
-1. Upewnij się, że Twój klaster GKE ma włączony "Network Policy Add-on" (lub używasz Dataplane V2).
-2. Zastosuj politykę `default-deny` dla każdego namespace'u.
-3. Dodawaj selektywne reguły `allow` oparte na labelach (`podSelector`).
+Binary Authorization allows GKE to run only container images that were signed or attested by an approved build process. This reduces the risk of running unauthorized or malicious images.
+
+### 3. Workload Identity
+
+Pods should not use static JSON keys. Workload Identity maps a Kubernetes Service Account to a Google Cloud service account so workloads can access Google APIs with short-lived credentials.
+
+### 4. Dataplane V2 and observability
+
+GKE Dataplane V2 can enforce network policy and provide visibility into pod networking. Flow visibility helps validate segmentation and investigate lateral movement attempts.
+
+## Deployment guidance for Network Policies
+
+1. Ensure the cluster supports network policy enforcement, for example through GKE Dataplane V2.
+2. Apply a `default-deny` policy in every namespace.
+3. Add narrow `allow` rules based on `podSelector`, `namespaceSelector`, ports, and protocols.
+4. Test both allowed and denied flows.
+5. Keep policies in source control and review changes through CI.
+
+## Validation evidence
+
+- Applied `NetworkPolicy` manifests.
+- Test output showing blocked cross-namespace or cross-tier traffic.
+- Workload Identity mapping between Kubernetes and Google service accounts.
+- Binary Authorization policy and attestation evidence.
+- Flow logs or observability output for allowed and denied traffic.
 
 ---
-*Reference: [GKE Network Policies Documentation](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policies)*
+Reference: [GKE network policies](https://cloud.google.com/kubernetes-engine/docs/how-to/network-policies)

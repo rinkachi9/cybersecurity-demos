@@ -1,8 +1,8 @@
 # Module Standard
 
-Kazdy modul demo powinien miec spójna strukture. Ten standard jest kryterium gotowosci dla dalszych prac.
+Every demo module should follow a consistent structure. This standard defines readiness criteria for future work and for review as an expert security engineering portfolio.
 
-## Minimalna struktura
+## Minimal structure
 
 ```text
 module-name/
@@ -19,28 +19,28 @@ module-name/
   tests/
 ```
 
-Nie kazdy modul musi miec Terraform lub testy od pierwszego dnia. Jezeli czegos brakuje, README powinien jasno oznaczac status i powod.
+Not every module needs Terraform or tests from the first iteration. If something is missing, the module README should clearly state the current status and the reason.
 
-## README modulu
+## Module README
 
-README powinien zawierac:
+The README should include:
 
-- Cel modulu.
-- Ryzyko biznesowe i techniczne.
-- Threat model albo abuse case.
-- Architekture.
-- Tryb vulnerable albo misconfigured, jezeli dotyczy.
-- Mitigacje.
-- Kroki uruchomienia.
-- Kroki weryfikacji.
-- Oczekiwane evidence.
-- Cleanup.
-- Koszty i ograniczenia.
-- Mapowanie compliance.
+- module purpose;
+- business and technical risk;
+- threat model or abuse case;
+- architecture;
+- vulnerable or misconfigured mode, where applicable;
+- mitigations;
+- run instructions;
+- verification steps;
+- expected evidence;
+- cleanup;
+- cost and limitations;
+- compliance mapping.
 
 ## Metadata
 
-Szablon znajduje sie w [docs/templates/metadata.yaml](./templates/metadata.yaml). Przyklad:
+The template is available at [docs/templates/metadata.yaml](./templates/metadata.yaml). Example:
 
 ```yaml
 id: gcp-cloud-armor-iap-cloud-run
@@ -67,124 +67,124 @@ validation:
 
 ## Evidence
 
-Szablon znajduje sie w [docs/templates/evidence.md](./templates/evidence.md).
+The template is available at [docs/templates/evidence.md](./templates/evidence.md).
 
-Evidence powinno byc lekkie i bez sekretow. Dopuszczalne artefakty:
+Evidence should be lightweight and free of secrets. Acceptable artifacts include:
 
-- zanonimizowane logi,
-- wyniki testow,
-- zapytania BigQuery,
-- zrzuty konfiguracji bez identyfikatorow wrazliwych,
-- outputy `gcloud` po redakcji,
-- opis oczekiwanego alertu.
+- anonymized logs;
+- test results;
+- BigQuery queries;
+- configuration snapshots without sensitive identifiers;
+- redacted `gcloud` output;
+- expected alert descriptions.
 
 ## Terraform
 
-Kazdy modul Terraform powinien miec:
+Every Terraform module should include:
 
-- `required_version`,
-- `required_providers`,
-- zmienne zamiast placeholderow,
-- walidacje zmiennych,
-- outputy,
-- opis uprawnien IAM,
-- instrukcje `plan`, `apply`, `destroy`,
-- ostrzezenie kosztowe, jezeli usluga jest platna.
+- `required_version`;
+- `required_providers`;
+- variables instead of placeholders;
+- variable validation;
+- outputs;
+- IAM permission notes;
+- `plan`, `apply`, and `destroy` instructions;
+- cost warning where a paid service is involved.
 
-Modul, ktory jest promowany do Etapu 3, musi dodatkowo miec:
+A module promoted to the productized Terraform baseline must additionally include:
 
-- `terraform.tfvars.example`,
-- `examples/minimal`,
-- brak placeholderow typu `YOUR_*`,
-- outputy potrzebne do integracji z pipeline albo runbookiem,
-- walidator repozytorium rozszerzony o ten modul.
+- `terraform.tfvars.example`;
+- `examples/minimal`;
+- no placeholders such as `YOUR_*`;
+- outputs required for pipeline or runbook integration;
+- central repository validator coverage for the module.
 
 ## Runbook
 
-Szablon znajduje sie w [docs/templates/runbook.md](./templates/runbook.md). Runbook jest wymagany dla modulow operacyjnych, ktore dotykaja detekcji, remediacji, kontroli dostepu albo zmian mogacych blokowac srodowisko.
+The template is available at [docs/templates/runbook.md](./templates/runbook.md). A runbook is required for operational modules that involve detection, remediation, access control, or changes that can block an environment.
 
 ## Quality gates
 
-Minimalny quality gate:
+Minimal quality gate:
 
 - Python syntax check.
-- JavaScript syntax check, jezeli `node` jest dostepny.
+- JavaScript syntax check when `node` is available.
 - Markdown local link check.
-- Sprawdzenie wymaganych plikow projektowych.
-- Sprawdzenie `metadata.yaml` dla glownej listy modulow demonstracyjnych.
-- Sprawdzenie `evidence/README.md` i `runbook.md`, jezeli metadata oznacza je jako wymagane.
-- Docelowo: Terraform fmt/validate, Checkov, TFLint, Trivy, Gitleaks, ZAP.
+- Required project file check.
+- `metadata.yaml` check for the main list of demo modules.
+- `evidence/README.md` and `runbook.md` checks when metadata marks them as required.
+- Target state: Terraform fmt/validate, Checkov, TFLint, Trivy, Gitleaks, and ZAP.
 
 ## Web workshop baseline
 
-Modul web security promowany do Etapu 4 powinien miec:
+A web security module promoted to the workshop baseline should include:
 
-- wariant vulnerable i secure,
-- jedna sciezke uruchomienia warsztatu,
-- health endpoint,
-- automatyczne PoC z trybem oczekiwan `vulnerable` i `secure`,
-- evidence template dla wynikow ataku i mitigacji,
-- walidator repozytorium sprawdzajacy minimalny kontrakt.
+- vulnerable and secure modes;
+- one workshop run path;
+- health endpoint;
+- automated PoC tests with `vulnerable` and `secure` expectations;
+- evidence template for attack and mitigation results;
+- central validator coverage for the minimal contract.
 
 ## GCP reference architecture baseline
 
-Referencyjna architektura promowana do Etapu 5 powinna miec:
+A reference architecture promoted to this baseline should include:
 
-- kompletna kompozycje kilku security controls, nie pojedynczy zasob,
-- Terraform z `versions.tf`, `variables.tf`, `outputs.tf`, `terraform.tfvars.example`,
-- `examples/minimal`,
-- diagram architektury jako kod,
-- skrypt weryfikacyjny dla zachowan security controls,
-- runbook operacyjny,
-- evidence guide,
-- walidator repozytorium sprawdzajacy minimalny kontrakt.
+- a complete composition of several security controls, not a single resource;
+- Terraform with `versions.tf`, `variables.tf`, `outputs.tf`, and `terraform.tfvars.example`;
+- `examples/minimal`;
+- architecture diagram as code;
+- verification script for security control behavior;
+- operational runbook;
+- evidence guide;
+- central validator coverage for the minimal contract.
 
 ## Detection engineering baseline
 
-Detekcja promowana do Etapu 6 powinna miec:
+A detection promoted to this baseline should include:
 
-- osobny katalog per detection,
-- `metadata.yaml` z data sources, MITRE ATT&CK, false positives i tuning,
-- `README.md` z logika i ograniczeniami,
-- `query.sql`,
-- `sample-events.json`,
-- `expected-result.json`,
-- walidator repozytorium sprawdzajacy strukture i skladnie JSON.
+- one directory per detection;
+- `metadata.yaml` with data sources, MITRE ATT&CK mapping, false positives, and tuning;
+- `README.md` with logic and limitations;
+- `query.sql`;
+- `sample-events.json`;
+- `expected-result.json`;
+- central validator coverage for structure and JSON syntax.
 
 ## SOAR dry-run baseline
 
-SOAR promowany do Etapu 6 powinien miec:
+A SOAR module promoted to this baseline should include:
 
-- deterministyczny risk scoring,
-- remediacje domyslnie w trybie `dry_run`,
-- sample events,
-- expected results,
-- lokalny test dry-run bez polaczenia z GCP,
-- walidator repozytorium sprawdzajacy minimalny kontrakt.
+- deterministic risk scoring;
+- remediation defaulting to `dry_run`;
+- sample events;
+- expected results;
+- local dry-run test without a GCP connection;
+- central validator coverage for the minimal contract.
 
 ## Supply chain baseline
 
-Supply-chain modul promowany do Etapu 7 powinien miec:
+A supply-chain module promoted to this baseline should include:
 
-- pipeline generujacy SBOM,
-- skan podatnosci z artefaktem wynikowym,
-- gate blokujacy wysokie/krytyczne podatnosci,
-- provenance albo przyklad predicate,
-- attestation albo przyklad payload,
-- admission policy,
-- evidence guide,
-- runbook,
-- CODEOWNERS dla security-sensitive paths,
-- walidator repozytorium sprawdzajacy minimalny kontrakt.
+- pipeline that generates an SBOM;
+- vulnerability scan with a result artifact;
+- gate blocking high and critical vulnerabilities;
+- provenance or example predicate;
+- attestation or example payload;
+- admission policy;
+- evidence guide;
+- runbook;
+- CODEOWNERS for security-sensitive paths;
+- central validator coverage for the minimal contract.
 
 ## Portfolio baseline
 
-Portfolio promowane do Etapu 8 powinno miec:
+The portfolio layer should include:
 
-- showcase z 5/30/60/90 minute review paths,
-- evidence matrix z poziomami dowodow,
-- demo script dzialajacy bez Dockera i bez GCP,
-- quickstart dla lokalnej walidacji,
-- koszty i ograniczenia dla modulow runtime/cloud,
-- decision records dla kluczowych wyborow,
-- walidator repozytorium sprawdzajacy minimalny kontrakt.
+- showcase with 5/30/60/90 minute review paths;
+- evidence matrix with proof levels;
+- demo script that works without Docker and without GCP;
+- quickstart for local validation;
+- cost and limitation notes for runtime and cloud modules;
+- decision records for key architecture choices;
+- central validator coverage for the minimal contract.

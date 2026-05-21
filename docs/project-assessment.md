@@ -1,63 +1,63 @@
 # Project Assessment
 
-## Cel projektu
+## Project goal
 
-`cybersecurity-demos` jest portfolio i laboratorium pokazujacym zaawansowane bezpieczenstwo aplikacji webowych, Google Cloud Platform, DevSecOps oraz SecOps. Projekt ma demonstrowac podejscie "Security by Design" i "Defense in Depth" przez dzialajace przyklady, IaC, automatyzacje i materialy architektoniczne.
+`cybersecurity-demos` is a portfolio and lab for advanced web application security, Google Cloud security, DevSecOps, and SecOps. The project demonstrates a Security by Design and Defense in Depth approach through working examples, IaC, automation, and architecture material.
 
-## Co jest obecnie przygotowane
+## Current state
 
-Obecne repozytorium zawiera:
+The repository currently includes:
 
-- Web Security: OWASP Top 10 lab w Node.js/Express z trybem podatnym i bezpiecznym.
-- GCP Cloud Security: IAM hardening, Workload Identity Federation, governance, network security, GKE, incident response i data security.
-- SecOps: Security Data Lake w BigQuery, detection SQL oraz SOAR oparty o Workflows, Pub/Sub i Cloud Functions.
-- DevSecOps: przyklady GitHub Actions, GitLab CI i Cloud Build.
-- Best practices: materialy dla IAM, network security i data security.
-- Portfolio governance: final acceptance, module standard, status matrix, showcase, evidence matrix, demo script, quickstart i ADR-y.
-- Productized reusable controls: Workload Identity Federation, Secure Cloud Run Edge, Cloud Armor WAF, VPC Service Controls, Cloud IDS, Packet Mirroring, Secure Web Proxy, Zero Trust IAP, Cloud DLP, GKE Service Mesh, Organization Policies, Resource Access Management, SOAR, GCP Native Supply Chain oraz Security Data Lake baseline.
+- Web Security: an OWASP Top 10 lab in Node.js/Express with vulnerable and secure modes.
+- GCP Cloud Security: IAM hardening, Workload Identity Federation, governance, network security, GKE, incident response, and data security.
+- SecOps: Security Data Lake in BigQuery, detection SQL, and SOAR based on Workflows, Pub/Sub, and Cloud Functions.
+- DevSecOps: GitHub Actions, GitLab CI, and Cloud Build examples.
+- Best Practices: material for IAM, network security, and data security.
+- Portfolio governance: final acceptance, module standard, status matrix, showcase, evidence matrix, demo script, quickstart, and ADRs.
+- Productized reusable controls: Workload Identity Federation, Secure Cloud Run Edge, Cloud Armor WAF, VPC Service Controls, Cloud IDS, Packet Mirroring, Secure Web Proxy, Zero Trust IAP, Cloud DLP, GKE Service Mesh, Organization Policies, Resource Access Management, SOAR, GCP Native Supply Chain, and Security Data Lake baseline.
 
-## Mocne strony
+## Strengths
 
-- Bardzo dobry zakres domen: aplikacja, cloud, siec, IAM, dane, CI/CD i operacje security.
-- Dobry kierunek architektoniczny: zero trust, least privilege, keyless auth, WAF, VPC SC, DLP, SOAR.
-- Istniejace przyklady kodu, a nie tylko opisow.
-- Mapowanie na standardy compliance w README.
-- Dobre tematy portfolio senior/architect: Security Data Lake, GCP-native SOAR, Binary Authorization, Cloud IDS, Secure Web Proxy.
+- Strong domain coverage: application security, cloud, network, IAM, data, CI/CD, and security operations.
+- Strong architecture direction: Zero Trust, least privilege, keyless authentication, WAF, VPC SC, DLP, and SOAR.
+- Working code examples instead of documentation-only material.
+- Compliance mapping in the main README.
+- Senior/architect-level portfolio topics: Security Data Lake, GCP-native SOAR, Binary Authorization, Cloud IDS, and Secure Web Proxy.
 
-## Pozostale luki operacyjne
+## Remaining operational gaps
 
-- Czesc przykladow nie ma jeszcze runtime evidence z izolowanego projektu GCP.
-- OWASP lab ma warsztatowy baseline, ale wymaga jeszcze ZAP evidence i ASVS route-level mapping.
-- Cloud IDS, Secure Web Proxy, GKE i VPC Service Controls wymagaja ostroznego testowania kosztow i blast radius.
-- Runtime supply-chain evidence wymaga rzeczywistego Cloud Build run i Binary Authorization allow/deny proof.
+- Some examples still need runtime evidence from an isolated GCP project.
+- The OWASP lab has a workshop baseline but still needs ZAP evidence and route-level ASVS mapping.
+- Cloud IDS, Secure Web Proxy, GKE, and VPC Service Controls require careful cost and blast-radius testing.
+- Runtime supply-chain evidence requires an actual Cloud Build run and Binary Authorization allow/deny proof.
 
-## Rekomendowana strategia rozwoju
+## Recommended development strategy
 
-Najlepsza sciezka to nie poszerzanie zakresu, tylko podniesienie jakosci istniejacych modulow. Projekt juz pokazuje szerokosc kompetencji. Poziom ekspercki bedzie widoczny wtedy, gdy kazdy kluczowy modul bedzie mial:
+The best next step is not expanding the scope, but improving evidence quality for existing modules. The project already demonstrates broad competence. The expert level becomes visible when every key module has:
 
-- threat model,
-- kod podatny i kod zabezpieczony,
-- automatyczny test,
-- logi i detekcje,
-- remediacje albo runbook,
-- IaC z walidacja,
-- jasny koszt i cleanup.
+- threat model;
+- vulnerable and secured behavior where applicable;
+- automated test;
+- logs and detections;
+- remediation or runbook;
+- IaC with validation;
+- clear cost and cleanup guidance.
 
-## Priorytet techniczny
+## Technical priority
 
-1. Quality foundation: walidator, workflow CI, standard modulu.
-2. OWASP lab: doprowadzenie do pelnego warsztatu.
-3. Workload Identity Federation: parametryzacja i keyless CI.
-4. Secure Cloud Run Edge: referencyjna architektura zero trust.
-5. Security Data Lake + SOAR: detekcje, sample events, dry-run remediations.
-6. Terraform hardening: providery, zmienne, przyklady, checkov/tflint.
+1. Quality foundation: validator, CI workflow, and module standard.
+2. OWASP lab: full workshop maturity.
+3. Workload Identity Federation: parameterization and keyless CI.
+4. Secure Cloud Run Edge: Zero Trust reference architecture.
+5. Security Data Lake and SOAR: detections, sample events, and dry-run remediation.
+6. Terraform hardening: providers, variables, examples, Checkov, and TFLint.
 
-## Ryzyka projektowe
+## Project risks
 
-- GCP demo moze generowac koszty, jezeli nie bedzie modulow cleanup i cost notes.
-- Mechanizmy typu VPC Service Controls, Cloud IDS i Secure Web Proxy moga blokowac srodowisko testowe przy nieostroznej konfiguracji.
-- Brak pinned versions w pipeline'ach moze wygladac slabo w projekcie supply-chain security.
+- GCP demos can generate cost if modules do not include cleanup and cost notes.
+- Controls such as VPC Service Controls, Cloud IDS, and Secure Web Proxy can disrupt a test environment if configured carelessly.
+- Missing pinned versions in pipelines can weaken the supply-chain security narrative.
 
-## Aktualna decyzja
+## Current decision
 
-Fundament, standaryzacja, productized Terraform we wszystkich katalogach `terraform/`, web workshop baseline, referencyjna architektura GCP, detection/SOAR baseline, supply-chain baseline, portfolio narrative baseline oraz final acceptance sa przygotowane. Najwieksza wartosc kolejnych iteracji bedzie w runtime evidence: uruchomienie wybranych modulow w izolowanym srodowisku, zebranie redaktowanych dowodow, cleanup proof i kosztow.
+The foundation, standardization, productized Terraform in all `terraform/` directories, web workshop baseline, GCP reference architecture, detection/SOAR baseline, supply-chain baseline, portfolio narrative baseline, and final acceptance are prepared. The highest-value next iterations are runtime evidence collection: run selected modules in isolated environments, collect redacted proof, capture cleanup evidence, and document costs.

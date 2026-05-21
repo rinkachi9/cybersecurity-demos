@@ -1,27 +1,34 @@
 # DevSecOps: Shift-Left Security Pipeline
 
-Ten moduł prezentuje podejście **Shift-Left**, czyli integrowanie testów bezpieczeństwa na jak najwcześniejszym etapie cyklu życia oprogramowania (SDLC).
+This module demonstrates a Shift-Left security approach: integrating security testing as early as possible in the software development lifecycle.
 
-## 🛡️ Filary Pipeline'u Security
+## Security pipeline pillars
 
-### 1. Secret Scanning (Gitleaks)
-- **Cel**: Wykrywanie zahardkodowanych haseł, kluczy API, certyfikatów i tokenów.
-- **Dlaczego?**: Wyciek poświadczeń to najczęstsza przyczyna incydentów chmurowych.
+### 1. Secret scanning with Gitleaks
 
-### 2. IaC Security (Checkov)
-- **Cel**: Skanowanie plików Terraform pod kątem błędów konfiguracyjnych.
-- **Przykład**: Wykrywa publiczne bucket-y S3, brak szyfrowania dysków lub zbyt szerokie reguły Firewall.
+- **Goal**: detect hardcoded passwords, API keys, certificates, private keys, and tokens.
+- **Why it matters**: credential leakage is one of the most common causes of cloud incidents.
 
-### 3. Software Composition Analysis (SCA) & SAST (Trivy)
-- **Cel**: Wykrywanie podatności w bibliotekach (np. `npm`, `pip`) oraz w systemie plików.
-- **Dlaczego?**: Twoja aplikacja jest tak bezpieczna, jak jej najsłabsza zależność (np. incydent Log4j).
+### 2. IaC security with Checkov
 
-## 🚀 Jak użyć tych narzędzi?
+- **Goal**: scan Terraform and other infrastructure definitions for insecure configuration.
+- **Example**: detect public buckets, missing disk encryption, overly broad firewall rules, or unsafe IAM bindings.
 
-W pliku `.github/workflows/security.yml` zdefiniowaliśmy joby, które uruchamiają się przy każdym `push` i `pull_request`. 
-Dobre praktyki:
-- **Block on Failure**: Jeśli narzędzie wykryje błąd o krytycznym priorytecie, pipeline powinien zostać przerwany.
-- **Visibility**: Wyniki powinny być raportowane w sekcji "Security" na GitHubie lub w komentarzach do PR.
+### 3. Software Composition Analysis and SAST with Trivy
+
+- **Goal**: detect vulnerabilities in libraries such as `npm` and `pip` packages, container images, and file systems.
+- **Why it matters**: application security depends on direct and transitive dependencies as much as on first-party code.
+
+## How to use these tools
+
+The example workflow defines jobs that run on every `push` and `pull_request`.
+
+Good practices:
+
+- **Block on failure**: if a tool finds a critical issue, the pipeline should fail.
+- **Visibility**: results should be reported in GitHub Security, uploaded as SARIF, or added to pull request feedback.
+- **Ownership**: findings need an owner and remediation SLA.
+- **Tuning**: suppressions should be explicit, minimal, and justified.
 
 ---
-*Narzędzia użyte w demo: [Gitleaks](https://github.com/gitleaks/gitleaks), [Checkov](https://www.checkov.io/), [Trivy](https://aquasecurity.github.io/trivy/)*
+Tools used in this demo: [Gitleaks](https://github.com/gitleaks/gitleaks), [Checkov](https://www.checkov.io/), [Trivy](https://aquasecurity.github.io/trivy/)

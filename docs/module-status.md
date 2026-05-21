@@ -1,6 +1,6 @@
 # Module Status Matrix
 
-Ta macierz pokazuje, ktore elementy sa juz przygotowane i co trzeba zrobic, zeby kazdy modul osiagnal poziom ekspercki.
+This matrix shows what is already prepared and what remains to make each module operationally credible at expert review level.
 
 | Area | Module | Current State | Expert Upgrade |
 | --- | --- | --- | --- |
@@ -23,14 +23,14 @@ Ta macierz pokazuje, ktore elementy sa juz przygotowane i co trzeba zrobic, zeby
 | DevSecOps | GitLab CI Pipeline | security template sample | policy gates, artifacts, severity thresholds |
 | DevSecOps | GCP Native Supply Chain | Productized Terraform plus SBOM/provenance/attestation baseline with Cloud Build, admission policy, examples, runbook and CODEOWNERS | Real Cloud Build evidence, Binary Authorization denial evidence, branch protection screenshot/export |
 
-## Status Legend
+## Status legend
 
 - Current State: what is present in the repository now.
 - Expert Upgrade: the next concrete step that makes the module operationally credible.
 
-## Stage 2 Baseline
+## Stage 2 baseline
 
-All modules in this matrix now have `metadata.yaml` with domain, level, status, tools, standards, controls, validation status, and next upgrade steps. They also have `evidence/README.md` so every module has an explicit place for redacted proof.
+All modules in this matrix now have `metadata.yaml` with domain, level, status, tools, standards, controls, validation status, and next upgrade steps. They also have `evidence/README.md`, so every module has an explicit place for redacted proof.
 
 The first operational runbook baseline exists for:
 
@@ -43,7 +43,7 @@ The first operational runbook baseline exists for:
 
 Remaining modules keep runbooks optional until they are promoted into active operational scenarios.
 
-## Stage 8 Baseline
+## Stage 8 baseline
 
 Portfolio readiness is now tracked as a first-class layer:
 
@@ -54,17 +54,17 @@ Portfolio readiness is now tracked as a first-class layer:
 - [Costs And Limitations](./costs-and-limitations.md) documents cost risk and safe deployment constraints.
 - [Decision Records](./decision-records/README.md) explain the architecture choices behind the portfolio.
 
-The central validator now checks this portfolio baseline so the narrative layer remains consistent with the technical artifacts.
+The central validator checks this portfolio baseline so the narrative layer remains consistent with the technical artifacts.
 
-## Final Static Baseline
+## Final static baseline
 
 All Terraform directories now have:
 
-- `main.tf`,
-- `versions.tf`,
-- `variables.tf`,
-- `outputs.tf`,
-- declared `required_providers`,
+- `main.tf`;
+- `versions.tf`;
+- `variables.tf`;
+- `outputs.tf`;
+- declared `required_providers`;
 - no `YOUR_*`, `yourdomain.com`, or `your-` placeholders.
 
 Runtime evidence remains intentionally separate: modules that require Docker, Terraform CLI, Cloud Build, or GCP deployment must collect redacted evidence before any production-validation claim.
