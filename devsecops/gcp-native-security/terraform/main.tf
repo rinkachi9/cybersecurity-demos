@@ -1,58 +1,51 @@
-# GCP Native DevSecOps: Artifact Registry + Binary Authorization
-# This demo shows how to secure the container supply chain on GCP.
-
-# 1. Artifact Registry with Automatic Scanning
 resource "google_artifact_registry_repository" "secure_repo" {
-  location      = "us-central1"
-  repository_id = "secure-docker-repo"
-  description   = "Docker repository with vulnerability scanning"
+  project       = var.project_id
+  location      = var.region
+  repository_id = var.repository_id
+  description   = "Docker repository for signed and scanned artifacts."
   format        = "DOCKER"
-
-  # Enabling Vulnerability Scanning (Requires Container Analysis API)
-  # In GCP, this is managed via the 'Vulnerability Scanning' service.
+  labels        = var.labels
 }
 
-# 2. Binary Authorization Policy
-# Enforces that only signed/scanned images can run on GKE or Cloud Run.
-resource "google_binary_authorization_policy" "policy" {
-  description = "Block untrusted images"
-
-  default_admission_rule {
-    evaluation_mode  = "ALWAYS_DENY" # Start by denying everything
-    enforcement_mode = "ENFORCED_BLOCK_AND_AUDIT_LOG"
-  }
-
-  # Allow images only if they meet specific criteria (e.g., from a trusted registry)
-  cluster_admission_rules {
-    cluster = "us-central1.production-cluster"
-    evaluation_mode  = "REQUIRE_ATTESTATION"
-    enforcement_mode = "ENFORCED_BLOCK_AND_AUDIT_LOG"
-    require_attestations_by = [
-      google_binary_authorization_attestor.vulnerability_attestor.name
-    ]
-  }
-}
-
-# 3. Attestor for Vulnerability Scanning
 resource "google_binary_authorization_attestor" "vulnerability_attestor" {
-  name = "vuln-attestor"
+  project = var.project_id
+  name    = var.attestor_name
+
   attestation_authority_note {
-    note_reference = google_container_analysis_note.vuln_note.name
+    note_reference = google_container_analysis_note.vulnerability_note.name
   }
 }
 
-resource "google_container_analysis_note" "vuln_note" {
-  name = "vulnerability-scan-note"
-  short_description = "Note for vulnerability scanning attestations"
-  long_description  = "This note is used by our CI/CD to sign images that passed Trivy/Snyk scans."
-  
+resource "google_container_analysis_note" "vulnerability_note" {
+  project           = var.project_id
+  name              = var.attestation_note_name
+  short_description = "Vulnerability scanning attestation note"
+  long_description  = "Used by CI/CD to attest images that pass SBOM and vulnerability gates."
+
   attestation_authority {
     hint {
-      human_readable_name = "Vulnerability Attestor"
+      human_readable_name = var.attestation_human_readable_name
     }
   }
 }
 
-output "artifact_registry_url" {
-  value = "us-central1-docker.pkg.dev/${var.project_id}/secure-docker-repo"
+resource "google_binary_authorization_policy" "policy" {
+  project     = var.project_id
+  description = "Require trusted attestations for protected deployment targets."
+
+  default_admission_rule {
+    evaluation_mode  = var.default_evaluation_mode
+    enforcement_mode = var.default_enforcement_mode
+  }
+
+  dynamic "cluster_admission_rules" {
+    for_each = var.cluster_admission_rules
+
+    content {
+      cluster                 = cluster_admission_rules.value.cluster
+      evaluation_mode         = "REQUIRE_ATTESTATION"
+      enforcement_mode        = cluster_admission_rules.value.enforcement_mode
+      require_attestations_by = [google_binary_authorization_attestor.vulnerability_attestor.name]
+    }
+  }
 }

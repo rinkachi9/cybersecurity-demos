@@ -1,84 +1,148 @@
-# GCP Advanced Cloud Armor: Bot Management & Adaptive Protection
-# This policy expands on basic WAF with ML-driven defense and Bot mitigation.
+locals {
+  preconfigured_waf_rules = {
+    sql_injection = {
+      expression  = "sqli-v33-stable"
+      priority    = var.sqli_rule_priority
+      action      = var.sqli_rule_action
+      description = "Block SQL injection probes"
+    }
+    cross_site_scripting = {
+      expression  = "xss-v33-stable"
+      priority    = var.xss_rule_priority
+      action      = var.xss_rule_action
+      description = "Block cross-site scripting probes"
+    }
+    local_file_inclusion = {
+      expression  = "lfi-v33-stable"
+      priority    = var.lfi_rule_priority
+      action      = var.lfi_rule_action
+      description = "Block local file inclusion and path traversal probes"
+    }
+    remote_code_execution = {
+      expression  = "rce-v33-stable"
+      priority    = var.rce_rule_priority
+      action      = var.rce_rule_action
+      description = "Block remote code execution probes"
+    }
+  }
+}
 
-resource "google_compute_security_policy" "advanced_waf_policy" {
-  name        = "enterprise-waf-policy"
-  description = "L7 Protection + Bot Management + ML Adaptive Protection"
+resource "google_compute_security_policy" "cloud_armor_waf" {
+  name        = var.policy_name
+  description = var.policy_description
 
-  # 1. Enable Adaptive Protection (ML-based DDoS detection)
   adaptive_protection_config {
     layer_7_ddos_defense_config {
-      enable = true
-      rule_visibility = "STANDARD"
+      enable          = var.enable_adaptive_protection
+      rule_visibility = var.adaptive_protection_rule_visibility
     }
   }
 
-  # 2. Advanced Rule: Bot Management (reCAPTCHA Enterprise)
-  # Redirects suspicious traffic to a reCAPTCHA challenge.
-  rule {
-    action   = "redirect"
-    priority = "500"
-    match {
-      expr {
-        expression = "evaluatePreconfiguredExpr('botmanagement-v1-stable')"
+  dynamic "rule" {
+    for_each = var.enable_bot_management ? [1] : []
+
+    content {
+      action      = "redirect"
+      priority    = var.bot_management_priority
+      preview     = var.bot_management_preview
+      description = "Challenge suspicious automated traffic with reCAPTCHA"
+
+      match {
+        expr {
+          expression = "evaluatePreconfiguredExpr('botmanagement-v1-stable')"
+        }
+      }
+
+      redirect_options {
+        type = "GOOGLE_RECAPTCHA"
       }
     }
-    redirect_options {
-      type = "GOOGLE_RECAPTCHA"
-    }
-    description = "Challenge suspicious bot traffic with reCAPTCHA"
   }
 
-  # 3. Advanced Rule: Rate Limiting with "Banning"
-  # If an IP exceeds 50 req/min, ban them for 10 minutes.
+  dynamic "rule" {
+    for_each = var.enable_rate_limiting ? [1] : []
+
+    content {
+      action      = var.enable_rate_based_ban ? "rate_based_ban" : "throttle"
+      priority    = var.rate_limit_priority
+      description = "Throttle or temporarily ban aggressive source IPs"
+
+      match {
+        versioned_expr = "SRC_IPS_V1"
+        config {
+          src_ip_ranges = var.rate_limit_source_ip_ranges
+        }
+      }
+
+      rate_limit_options {
+        conform_action = "allow"
+        exceed_action  = var.rate_limit_exceed_action
+        enforce_on_key = "IP"
+
+        rate_limit_threshold {
+          count        = var.rate_limit_threshold_count
+          interval_sec = var.rate_limit_threshold_interval_sec
+        }
+
+        dynamic "ban_threshold" {
+          for_each = var.enable_rate_based_ban ? [1] : []
+
+          content {
+            count        = var.ban_threshold_count
+            interval_sec = var.ban_threshold_interval_sec
+          }
+        }
+
+        ban_duration_sec = var.enable_rate_based_ban ? var.ban_duration_sec : null
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.preconfigured_waf_rules
+    iterator = waf_rule
+
+    content {
+      action      = waf_rule.value.action
+      priority    = waf_rule.value.priority
+      preview     = var.preconfigured_waf_rules_preview
+      description = waf_rule.value.description
+
+      match {
+        expr {
+          expression = "evaluatePreconfiguredExpr('${waf_rule.value.expression}')"
+        }
+      }
+    }
+  }
+
+  dynamic "rule" {
+    for_each = var.custom_rules
+
+    content {
+      action      = rule.value.action
+      priority    = rule.value.priority
+      preview     = rule.value.preview
+      description = rule.value.description
+
+      match {
+        expr {
+          expression = rule.value.expression
+        }
+      }
+    }
+  }
+
   rule {
-    action   = "throttle"
-    priority = "1000"
+    action      = var.default_rule_action
+    priority    = 2147483647
+    description = "Default policy action"
+
     match {
       versioned_expr = "SRC_IPS_V1"
       config {
         src_ip_ranges = ["*"]
       }
     }
-    rate_limit_options {
-      conform_action = "allow"
-      exceed_action  = "deny(429)"
-      rate_limit_threshold {
-        count        = 50
-        interval_sec = 60
-      }
-      enforce_on_key = "IP"
-      ban_threshold {
-        count = 100
-        interval_sec = 60
-      }
-      ban_duration_sec = 600 # 10 minutes ban
-    }
-    description = "Throttle and ban aggressive IPs"
-  }
-
-  # 4. Standard WAF Rules (SQLi, XSS)
-  rule {
-    action   = "deny(403)"
-    priority = "2000"
-    match {
-      expr {
-        expression = "evaluatePreconfiguredExpr('sqli-v33-stable')"
-      }
-    }
-    description = "Block SQL Injection"
-  }
-
-  # Default Rule
-  rule {
-    action   = "allow"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "Default allow"
   }
 }

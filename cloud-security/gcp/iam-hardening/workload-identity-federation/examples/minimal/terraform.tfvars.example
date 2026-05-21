@@ -1,0 +1,12 @@
+project_id          = "security-lab-12345"
+github_organization = "example-org"
+github_repository   = "cybersecurity-demos"
+
+allowed_refs = [
+  "refs/heads/main",
+]
+
+service_account_project_roles = [
+  "roles/viewer",
+]
+

@@ -1,0 +1,13 @@
+{
+  "finding": {
+    "resourceName": "projects/-/serviceAccounts/build@example.iam.gserviceaccount.com/keys/def456",
+    "severity": "MEDIUM",
+    "category": "LEAKED_SERVICE_ACCOUNT_KEY",
+    "state": "ACTIVE"
+  },
+  "source_ip": "198.51.100.20",
+  "active_usage": false,
+  "suspicious_source": false,
+  "dry_run": true
+}
+

@@ -1,0 +1,26 @@
+id: gcp-cloud-dlp-demo
+title: Cloud DLP PII Inspection and Masking
+domain: cloud-security
+level: intermediate
+status: productized-iac-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - python
+  - cloud-dlp
+standards:
+  - GDPR
+  - PCI-DSS
+  - NIST CSF
+controls:
+  - pii inspection
+  - de-identification
+  - masking
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add real API execution mode.
+  - Add deterministic sample test data.
+  - Add evidence for before and after de-identification.

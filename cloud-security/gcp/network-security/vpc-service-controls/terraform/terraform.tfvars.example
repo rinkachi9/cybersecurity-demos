@@ -1,0 +1,39 @@
+organization_id    = "123456789012"
+access_policy_name = "accessPolicies/123456789012"
+
+protected_project_numbers = [
+  "111111111111",
+]
+
+enforcement_mode = "dry-run"
+
+restricted_services = [
+  "bigquery.googleapis.com",
+  "storage.googleapis.com",
+]
+
+trusted_ip_subnetworks = [
+  "203.0.113.0/24",
+]
+
+trusted_regions = [
+  "PL",
+  "DE",
+]
+
+egress_policies = [
+  {
+    identities = [
+      "serviceAccount:data-pipeline@demo-security-sandbox.iam.gserviceaccount.com",
+    ]
+    destination_project_numbers = [
+      "222222222222",
+    ]
+    operations = [
+      {
+        service_name = "storage.googleapis.com"
+        methods      = ["google.storage.objects.create"]
+      }
+    ]
+  }
+]

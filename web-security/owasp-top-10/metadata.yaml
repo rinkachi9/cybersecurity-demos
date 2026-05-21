@@ -1,0 +1,29 @@
+id: web-owasp-top-10-lab
+title: OWASP Top 10 Mitigation Lab
+domain: web-security
+level: advanced
+status: workshop-baseline
+estimated_cost: none
+tools:
+  - node
+  - npm
+  - python
+  - docker
+  - docker-compose
+standards:
+  - OWASP Top 10 2021
+  - OWASP ASVS
+controls:
+  - parameterized queries
+  - output encoding
+  - content security policy
+  - role-based access control
+  - object-level authorization
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add OWASP ZAP baseline scan.
+  - Add OWASP ASVS route-level mapping.
+  - Add CSRF or SSRF scenario when the lab gets a browser-facing workflow.

@@ -1,33 +1,89 @@
-import requests
+#!/usr/bin/env python3
+"""Cloud Armor WAF verification helper.
+
+The script uses only the Python standard library so it can run in constrained
+review environments. Run it against a load balancer endpoint, not a direct
+backend URL.
+"""
+
+from __future__ import annotations
+
+import argparse
 import sys
+from dataclasses import dataclass
+from urllib.error import HTTPError, URLError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
-# Cloud Armor WAF Verification Tool
-# This script sends various payloads to the Load Balancer IP to verify WAF protection.
 
-def verify_waf(lb_ip):
-    base_url = f"http://{lb_ip}"
-    
-    test_cases = [
-        {"name": "Legitimate Traffic", "params": {"id": "123"}, "expected": 200},
-        {"name": "SQL Injection Attack", "params": {"id": "' OR '1'='1"}, "expected": 403},
-        {"name": "XSS Attack", "params": {"id": "<script>alert('XSS')</script>"}, "expected": 403},
-        {"name": "Path Traversal", "params": {"file": "../../../etc/passwd"}, "expected": 403},
-    ]
+@dataclass(frozen=True)
+class TestCase:
+    name: str
+    params: dict[str, str]
+    expected_status: int
 
-    print(f"--- Testing WAF on {base_url} ---")
-    
-    for test in test_cases:
+
+TEST_CASES = [
+    TestCase("legitimate traffic", {"id": "123"}, 200),
+    TestCase("sql injection", {"id": "' OR '1'='1"}, 403),
+    TestCase("cross-site scripting", {"id": "<script>alert('xss')</script>"}, 403),
+    TestCase("path traversal", {"file": "../../../etc/passwd"}, 403),
+    TestCase("remote code execution", {"cmd": ";cat /etc/passwd"}, 403),
+]
+
+
+def build_base_url(target: str, scheme: str) -> str:
+    if target.startswith(("http://", "https://")):
+        return target.rstrip("/")
+    return f"{scheme}://{target.rstrip('/')}"
+
+
+def fetch_status(url: str, timeout: float) -> int:
+    request = Request(url, headers={"User-Agent": "cloud-armor-waf-verifier/1.0"})
+    try:
+        with urlopen(request, timeout=timeout) as response:
+            return int(response.status)
+    except HTTPError as exc:
+        return int(exc.code)
+
+
+def run_checks(base_url: str, path: str, timeout: float) -> bool:
+    normalized_path = path if path.startswith("/") else f"/{path}"
+    passed = True
+    print(f"--- Testing WAF on {base_url}{normalized_path} ---")
+
+    for test in TEST_CASES:
+        query = urlencode(test.params)
+        url = f"{base_url}{normalized_path}?{query}"
         try:
-            r = requests.get(base_url, params=test["params"])
-            status = r.status_code
-            result = "PASS" if status == test["expected"] else "FAIL"
-            print(f"[{result}] {test['name']:25} | Code: {status} (Expected: {test['expected']})")
-        except Exception as e:
-            print(f"[ERROR] Could not connect to {base_url}: {e}")
+            status = fetch_status(url, timeout)
+        except URLError as exc:
+            print(f"[ERROR] {test.name:24} | connection failed: {exc.reason}")
+            passed = False
+            continue
+
+        result = "PASS" if status == test.expected_status else "FAIL"
+        if result == "FAIL":
+            passed = False
+        print(f"[{result}] {test.name:24} | code: {status} expected: {test.expected_status}")
+
+    return passed
+
+
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Verify Cloud Armor WAF behavior through a load balancer.")
+    parser.add_argument("target", help="Load balancer host, IP, or full URL.")
+    parser.add_argument("--scheme", choices=["http", "https"], default="https", help="Scheme used when target has no scheme.")
+    parser.add_argument("--path", default="/", help="Request path to test.")
+    parser.add_argument("--timeout", type=float, default=5.0, help="HTTP timeout in seconds.")
+    return parser.parse_args(argv)
+
+
+def main(argv: list[str]) -> int:
+    args = parse_args(argv)
+    base_url = build_base_url(args.target, args.scheme)
+    return 0 if run_checks(base_url, args.path, args.timeout) else 1
+
 
 if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Usage: python verify_waf.py <LOAD_BALANCER_IP>")
-        sys.exit(1)
-    
-    verify_waf(sys.argv[1])
+    raise SystemExit(main(sys.argv[1:]))

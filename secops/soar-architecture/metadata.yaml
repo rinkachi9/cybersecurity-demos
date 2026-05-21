@@ -1,0 +1,29 @@
+id: gcp-soar-leaked-key-response
+title: SOAR Leaked Service Account Key Response
+domain: secops
+level: expert
+status: productized-iac-and-dry-run-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - workflows
+  - cloud-functions
+  - pubsub
+standards:
+  - NIST CSF
+  - SOC2
+  - MITRE ATTACK
+controls:
+  - event-driven response
+  - enrichment
+  - risk scoring
+  - automatic remediation
+  - audit trail
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Add human approval path evidence.
+  - Add deployed Cloud Workflows execution evidence.
+  - Add local workflow simulator for sample event routing.

@@ -1,0 +1,26 @@
+id: gcp-zero-trust-iap
+title: Zero Trust Access with Identity-Aware Proxy
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - gcloud
+standards:
+  - NIST SP 800-207
+  - SOC2
+  - CIS GCP Benchmark
+controls:
+  - identity-aware proxy
+  - context-aware access
+  - conditional iam
+  - perimeter bridge
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add authenticated and unauthenticated access tests.
+  - Add device context verification guidance.
+  - Capture IAP deny/allow evidence from a sandbox backend.

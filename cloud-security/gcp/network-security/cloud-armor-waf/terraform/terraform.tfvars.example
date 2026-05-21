@@ -1,0 +1,24 @@
+project_id = "demo-security-sandbox"
+
+policy_name = "secure-edge-waf"
+
+enable_adaptive_protection = true
+enable_bot_management      = false
+enable_rate_limiting       = true
+enable_rate_based_ban      = false
+
+rate_limit_threshold_count        = 100
+rate_limit_threshold_interval_sec = 60
+rate_limit_exceed_action          = "deny(429)"
+
+preconfigured_waf_rules_preview = false
+
+custom_rules = [
+  {
+    priority    = 3000
+    action      = "deny(403)"
+    expression  = "request.path.matches('/admin/.*') && !origin.region_code.matches('PL|DE|NL')"
+    description = "Example geo-aware admin path restriction"
+    preview     = true
+  }
+]

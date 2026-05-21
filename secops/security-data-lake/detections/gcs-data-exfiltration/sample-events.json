@@ -1,0 +1,10 @@
+[
+  {
+    "actor": "data-exporter@example.iam.gserviceaccount.com",
+    "bucket": "sensitive-research-data",
+    "methodName": "storage.objects.get",
+    "total_bytes_transferred": 1500000000,
+    "operations_count": 420
+  }
+]
+

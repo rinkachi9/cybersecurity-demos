@@ -1,0 +1,28 @@
+id: gitlab-ci-security-baseline
+title: GitLab CI Security Baseline
+domain: devsecops
+level: intermediate
+status: pipeline-template
+estimated_cost: none
+tools:
+  - gitlab-ci
+  - trivy
+  - gitlab-sast
+  - secret-detection
+standards:
+  - NIST SSDF
+  - OWASP SAMM
+  - SOC2
+controls:
+  - sast
+  - secret detection
+  - dependency scanning
+  - container scanning
+validation:
+  automated: partial
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add severity-based fail policy.
+  - Add artifacts and security report examples.
+  - Add GitLab OIDC to GCP variant.

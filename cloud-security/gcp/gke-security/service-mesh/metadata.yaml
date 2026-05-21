@@ -1,0 +1,28 @@
+id: gcp-gke-service-mesh-security
+title: GKE Service Mesh mTLS Security
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: medium
+tools:
+  - terraform
+  - kubectl
+  - istioctl
+  - gcloud
+standards:
+  - NIST CSF
+  - PCI-DSS
+  - CIS Kubernetes Benchmark
+controls:
+  - service mesh
+  - mutual tls
+  - authorization policy
+  - workload identity
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add sample workloads for mTLS checks.
+  - Add strict peer authentication verification.
+  - Add traffic authorization test evidence.

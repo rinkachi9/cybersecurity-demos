@@ -1,0 +1,27 @@
+id: gcp-secure-web-proxy
+title: Secure Web Proxy Egress Filtering
+domain: cloud-security
+level: expert
+status: productized-iac-baseline
+estimated_cost: medium
+tools:
+  - terraform
+  - gcloud
+  - curl
+standards:
+  - NIST CSF
+  - SOC2
+  - PCI-DSS
+controls:
+  - fqdn filtering
+  - url lists
+  - tls inspection
+  - egress control
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add allow and deny egress tests.
+  - Add TLS inspection caveats and exclusions.
+  - Capture SWP runtime evidence from a sandbox gateway.

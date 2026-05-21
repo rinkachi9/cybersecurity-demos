@@ -1,0 +1,9 @@
+[
+  {
+    "user": "attacker@example.com",
+    "source_ip": "203.0.113.10",
+    "failed_attempts_min": 21,
+    "expected_severity": "medium"
+  }
+]
+

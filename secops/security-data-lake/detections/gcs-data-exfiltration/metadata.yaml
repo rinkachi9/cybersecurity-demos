@@ -1,0 +1,17 @@
+id: gcp-gcs-data-exfiltration
+name: Large GCS Data Exfiltration
+severity: high
+status: production-candidate
+data_sources:
+  - Cloud Audit Logs Data Access
+mitre_attack:
+  - T1530
+  - T1041
+false_positives:
+  - Approved backup restore.
+  - Data science batch export.
+  - Migration job.
+tuning:
+  threshold_bytes: "> 1000000000"
+  time_window: 24 hours
+

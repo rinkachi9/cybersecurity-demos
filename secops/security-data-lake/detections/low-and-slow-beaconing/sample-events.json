@@ -1,0 +1,9 @@
+[
+  {
+    "src_vm": "10.10.1.15",
+    "dest_ip": "198.51.100.77",
+    "minutes_observed": 15,
+    "packet_count_per_minute": [3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3, 4, 3, 3, 3]
+  }
+]
+

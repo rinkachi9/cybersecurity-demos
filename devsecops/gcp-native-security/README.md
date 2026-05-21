@@ -21,5 +21,23 @@ In modern Cloud Native environments, security does not end with the application 
 2. Add a scanning step (e.g., **Trivy**) in the `cloudbuild.yaml` file.
 3. Enable **Binary Authorization** on GKE/Cloud Run and define a "Require Attestation" policy.
 
+## Supply Chain Baseline
+
+The advanced baseline is defined in [cloud-build/secure-supply-chain.yaml](./cloud-build/secure-supply-chain.yaml). It adds:
+
+- immutable commit-SHA image tagging,
+- SPDX JSON SBOM generation,
+- Trivy SARIF output,
+- HIGH/CRITICAL vulnerability gate,
+- Binary Authorization attestation,
+- evidence artifact upload.
+
+Supporting policy and evidence examples:
+
+- [Supply chain policy](./policies/admission-policy.yaml)
+- [SLSA provenance example](./provenance/slsa-provenance.example.json)
+- [Binary Authorization attestation payload example](./attestations/binauthz-attestation-payload.example.json)
+- [Runbook](./runbook.md)
+
 ---
 *Reference: [GCP Binary Authorization Overview](https://cloud.google.com/binary-authorization/docs/overview)*

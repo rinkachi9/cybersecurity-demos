@@ -1,0 +1,28 @@
+id: gcp-incident-response-public-bucket
+title: Automated Incident Response for Public Bucket Findings
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - cloud-functions
+  - pubsub
+  - security-command-center
+standards:
+  - NIST CSF
+  - SOC2
+  - CIS GCP Benchmark
+controls:
+  - scc findings
+  - pubsub trigger
+  - automated remediation
+  - least privilege iam
+validation:
+  automated: partial
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Add sample SCC finding payloads.
+  - Add before and after bucket IAM evidence.
+  - Capture dry-run remediation output from a sandbox finding.

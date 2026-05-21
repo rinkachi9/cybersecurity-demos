@@ -1,0 +1,12 @@
+flowchart TB
+  User[Authenticated user] --> HTTPS[Global HTTPS Load Balancer]
+  Internet[Untrusted internet] --> HTTPS
+  HTTPS --> Armor[Cloud Armor WAF]
+  Armor --> IAP[Identity-Aware Proxy]
+  IAP --> NEG[Serverless NEG]
+  NEG --> Run[Cloud Run service]
+  Run --> RuntimeSA[Runtime service account]
+  Armor --> Logs[Cloud Logging]
+  IAP --> Logs
+  Run --> Logs
+

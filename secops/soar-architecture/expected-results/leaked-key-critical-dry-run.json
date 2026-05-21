@@ -1,0 +1,7 @@
+{
+  "expected_path": "auto_remediate",
+  "expected_action": "DISABLE_KEY",
+  "expected_remediation_status": "DRY_RUN",
+  "expected_min_risk_score": 81
+}
+

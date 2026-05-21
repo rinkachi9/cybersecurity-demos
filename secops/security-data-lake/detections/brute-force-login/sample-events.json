@@ -1,0 +1,10 @@
+[
+  {
+    "timestamp": "2026-05-03T10:00:00Z",
+    "principalEmail": "attacker@example.com",
+    "remoteIp": "203.0.113.10",
+    "statusCode": 16,
+    "event_count": 25
+  }
+]
+

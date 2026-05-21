@@ -7,7 +7,7 @@ steps:
     args: ['build', '-t', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA', '.']
 
   # 2. Run Vulnerability Scan (Trivy)
-  - name: 'aquasec/trivy:latest'
+  - name: 'aquasec/trivy:0.56.2'
     args: ['image', '--severity', 'HIGH,CRITICAL', '--exit-code', '1', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA']
     # Pipeline will fail here if high-severity vulnerabilities are found.
 
@@ -15,9 +15,8 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA']
 
-  # 4. Optional: Create Binary Authorization Attestation (if successful)
-  # - name: 'gcr.io/cloud-builders/gcloud'
-  #   args: ['container', 'binauthz', 'attestations', 'create', ...]
+  # 4. Full SBOM/provenance/attestation baseline:
+  # See secure-supply-chain.yaml in this directory.
 
 images:
   - 'us-central1-docker.pkg.dev/$PROJECT_ID/secure-docker-repo/my-app:$COMMIT_SHA'

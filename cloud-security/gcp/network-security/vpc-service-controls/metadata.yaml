@@ -1,0 +1,30 @@
+id: gcp-vpc-service-controls
+title: VPC Service Controls Data Exfiltration Defense
+domain: cloud-security
+level: expert
+status: productized-iac-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - gcloud
+  - gsutil
+  - bq
+standards:
+  - NIST CSF
+  - SOC2
+  - GDPR
+controls:
+  - service perimeter
+  - dry-run perimeter spec
+  - access levels
+  - ingress policy
+  - egress policy
+  - data exfiltration prevention
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Capture terraform validate and dry-run plan evidence.
+  - Add ingress and egress test cases.
+  - Add rollback and exception workflow.

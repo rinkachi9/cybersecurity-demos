@@ -1,0 +1,27 @@
+id: gcp-workload-identity-federation
+title: GCP Workload Identity Federation for CI/CD
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: none
+tools:
+  - terraform
+  - gcloud
+  - github-actions
+standards:
+  - CIS GCP Benchmark
+  - NIST CSF
+  - SOC2
+controls:
+  - keyless authentication
+  - workload identity federation
+  - repository-scoped claims
+  - least privilege service account
+validation:
+  automated: false
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Add GitLab OIDC claim example.
+  - Add a test proving no service account key is required.
+  - Add Terraform CI validation when Terraform is available in the runner.

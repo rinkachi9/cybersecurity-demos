@@ -1,0 +1,28 @@
+id: gcp-cloud-ids
+title: Cloud IDS Managed Intrusion Detection
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: high
+tools:
+  - terraform
+  - gcloud
+  - security-command-center
+standards:
+  - NIST CSF
+  - PCI-DSS
+  - SOC2
+controls:
+  - service networking connection
+  - deep packet inspection
+  - packet mirroring
+  - managed ids
+  - scc findings
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Capture terraform validate and plan evidence from an isolated project.
+  - Run short-lived threat simulation and collect SCC finding evidence.
+  - Add alert routing from SCC finding to Security Data Lake or SOAR.

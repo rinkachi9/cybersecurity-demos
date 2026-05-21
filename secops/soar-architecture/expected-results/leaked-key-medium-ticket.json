@@ -1,0 +1,7 @@
+{
+  "expected_path": "create_ticket",
+  "expected_action": "CREATE_TICKET",
+  "expected_remediation_status": "NO_OP",
+  "expected_max_risk_score": 80
+}
+

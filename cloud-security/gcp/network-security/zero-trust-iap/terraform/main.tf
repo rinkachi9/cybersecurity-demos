@@ -1,59 +1,54 @@
-# GCP Identity-Aware Proxy (IAP) with Context-Aware Access (CAA)
-# This setup enforces Zero Trust access based on identity and device context.
-
-# 1. Access Level Definition (Advanced)
-# Users must be in the US, on a managed device, and have an encrypted disk.
 resource "google_access_context_manager_access_level" "secure_context" {
-  parent = "accessPolicies/YOUR_ORG_POLICY_ID"
-  name   = "accessPolicies/YOUR_ORG_POLICY_ID/accessLevels/secure_corporate_context"
-  title  = "Secure Corporate Access"
+  parent = var.access_policy_name
+  name   = "${var.access_policy_name}/accessLevels/${var.access_level_id}"
+  title  = var.access_level_title
 
   basic {
+    combining_function = "AND"
+
     conditions {
-      ip_subnetworks = ["203.0.113.0/24"] # Trusted Corporate IP
-      regions        = ["US"]             # Geo-restriction
+      ip_subnetworks = var.trusted_ip_subnetworks
+      regions        = var.trusted_regions
+
       device_policy {
-        require_screen_lock = true
-        require_admin_approval = true
+        require_screen_lock    = var.require_screen_lock
+        require_admin_approval = var.require_admin_approval
+
         os_constraints {
-          os_type = "DESKTOP_CHROME_OS"
-          minimum_version = "114.0.0"
+          os_type         = var.required_os_type
+          minimum_version = var.minimum_os_version
         }
       }
     }
-    combining_function = "AND"
   }
 }
 
-# 2. Granting IAP Access with the Condition
-# Access to the Backend Service is ONLY allowed if the Secure Context is met.
 resource "google_iap_web_backend_service_iam_member" "conditional_access" {
-  project = "YOUR_PROJECT_ID"
-  web_backend_service = "your-backend-service"
-  role    = "roles/iap.httpsResourceAccessor"
-  member  = "user:john.doe@yourdomain.com"
+  for_each = var.iap_members
 
-  # The key Zero Trust bridge: Linking IAM with Context-Aware Access
+  project             = var.project_id
+  web_backend_service = var.web_backend_service_name
+  role                = "roles/iap.httpsResourceAccessor"
+  member              = each.value
+
   condition {
-    title       = "Secure Device Only"
-    expression  = "accessContextManager.grant_viewer_from_secure_corporate_context"
+    title       = var.iam_condition_title
+    description = "Require Context-Aware Access level for IAP access."
+    expression  = "accessContextManager.accessLevels.contains('${google_access_context_manager_access_level.secure_context.name}')"
   }
 }
-
-# --- VPC Service Controls Bridge (Advanced) ---
-# Allows two isolated perimeters to securely share data (e.g., Prod and Analytics).
 
 resource "google_access_context_manager_service_perimeter" "bridge_perimeter" {
-  parent = "accessPolicies/YOUR_ORG_POLICY_ID"
-  name   = "accessPolicies/YOUR_ORG_POLICY_ID/servicePerimeters/prod_to_analytics_bridge"
-  title  = "Production to Analytics Bridge"
+  count = var.enable_bridge_perimeter ? 1 : 0
+
+  parent         = var.access_policy_name
+  name           = "${var.access_policy_name}/servicePerimeters/${var.bridge_perimeter_id}"
+  title          = var.bridge_perimeter_title
   perimeter_type = "PERIMETER_TYPE_BRIDGE"
 
   status {
-    # Linking two isolated perimeters together
     resources = [
-      "projects/PRODUCTION_PROJECT_NUMBER",
-      "projects/ANALYTICS_PROJECT_NUMBER"
+      for project_number in var.bridge_project_numbers : "projects/${project_number}"
     ]
   }
 }

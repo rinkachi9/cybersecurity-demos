@@ -1,0 +1,27 @@
+id: gcp-packet-mirroring
+title: Packet Mirroring for Network Detection and Response
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: medium
+tools:
+  - terraform
+  - tcpdump
+  - zeek
+  - suricata
+standards:
+  - NIST CSF
+  - PCI-DSS
+  - SOC2
+controls:
+  - packet mirroring
+  - collector load balancing
+  - ndr visibility
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add collector VM example.
+  - Add Suricata or Zeek parsing path.
+  - Add mirrored traffic verification evidence.

@@ -1,0 +1,18 @@
+{
+  "critical": {
+    "identity": {
+      "docker-reference": "us-central1-docker.pkg.dev/example-project/secure-docker-repo/my-app"
+    },
+    "image": {
+      "docker-manifest-digest": "sha256:exampledigest000000000000000000000000000000000000000000000000000000"
+    },
+    "type": "Google cloud binauthz container signature"
+  },
+  "optional": {
+    "build_id": "cloud-build-id-placeholder",
+    "sbom": "gs://supply-chain-evidence-example/cloud-build-id/sbom.spdx.json",
+    "scanner": "trivy",
+    "scanner_result": "gs://supply-chain-evidence-example/cloud-build-id/trivy.sarif"
+  }
+}
+

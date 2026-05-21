@@ -1,0 +1,29 @@
+project_id = "demo-security-sandbox"
+region     = "us-central1"
+
+network_name = "security-monitoring-vpc"
+
+endpoint_name            = "corporate-ids-endpoint"
+minimum_threat_severity  = "MEDIUM"
+enable_required_services = false
+
+enable_private_service_connection     = true
+create_reserved_peering_range         = true
+private_service_range_name            = "ids-peering-address"
+private_service_range_prefix_length   = 16
+
+enable_packet_mirroring       = true
+packet_mirroring_policy_name  = "ids-mirror-policy"
+mirrored_subnetwork_self_links = [
+  "projects/demo-security-sandbox/regions/us-central1/subnetworks/monitored-subnet",
+]
+
+mirrored_ip_protocols = ["tcp", "udp", "icmp"]
+mirrored_cidr_ranges  = ["10.10.0.0/16"]
+mirroring_direction   = "BOTH"
+
+labels = {
+  domain      = "network-security"
+  control     = "cloud-ids"
+  environment = "sandbox"
+}

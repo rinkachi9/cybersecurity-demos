@@ -1,0 +1,17 @@
+id: gcp-brute-force-login
+name: Brute Force Login Attempts
+severity: medium
+status: production-candidate
+data_sources:
+  - Cloud Audit Logs
+mitre_attack:
+  - T1110
+false_positives:
+  - Misconfigured service account credentials.
+  - Broken automation retrying with stale tokens.
+tuning:
+  threshold: failed_attempts > 20 in 1 hour
+  dimensions:
+    - user
+    - source_ip
+

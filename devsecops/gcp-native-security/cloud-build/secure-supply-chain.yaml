@@ -1,0 +1,107 @@
+# GCP Native Secure Supply Chain Pipeline
+#
+# Baseline flow:
+# 1. Build immutable image tagged by commit SHA.
+# 2. Generate SPDX JSON SBOM.
+# 3. Scan image and emit SARIF evidence.
+# 4. Fail on HIGH/CRITICAL vulnerabilities.
+# 5. Push image only after scan gate passes.
+# 6. Create Binary Authorization attestation.
+
+substitutions:
+  _REGION: us-central1
+  _REPOSITORY: secure-docker-repo
+  _IMAGE_NAME: my-app
+  _ATTESTOR: vulnerability-attestor
+  _ATTESTOR_PROJECT: $PROJECT_ID
+  _KMS_PROJECT: $PROJECT_ID
+  _KMS_LOCATION: global
+  _KMS_KEYRING: binauthz
+  _KMS_KEY: attestations
+  _KMS_KEY_VERSION: "1"
+  _ARTIFACT_BUCKET: supply-chain-evidence-$PROJECT_ID
+
+steps:
+  - id: build-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -t
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+      - .
+
+  - id: generate-sbom
+    name: anchore/syft:v1.18.1
+    args:
+      - packages
+      - docker:${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+      - -o
+      - spdx-json=/workspace/sbom.spdx.json
+
+  - id: trivy-sarif
+    name: aquasec/trivy:0.56.2
+    args:
+      - image
+      - --format
+      - sarif
+      - --output
+      - /workspace/trivy.sarif
+      - --severity
+      - HIGH,CRITICAL
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+
+  - id: vulnerability-gate
+    name: aquasec/trivy:0.56.2
+    args:
+      - image
+      - --exit-code
+      - "1"
+      - --severity
+      - HIGH,CRITICAL
+      - --ignore-unfixed
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+
+  - id: push-image
+    name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+
+  - id: create-binauthz-attestation
+    name: gcr.io/cloud-builders/gcloud
+    args:
+      - container
+      - binauthz
+      - attestations
+      - sign-and-create
+      - --artifact-url
+      - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+      - --attestor
+      - ${_ATTESTOR}
+      - --attestor-project
+      - ${_ATTESTOR_PROJECT}
+      - --keyversion-project
+      - ${_KMS_PROJECT}
+      - --keyversion-location
+      - ${_KMS_LOCATION}
+      - --keyversion-keyring
+      - ${_KMS_KEYRING}
+      - --keyversion-key
+      - ${_KMS_KEY}
+      - --keyversion
+      - ${_KMS_KEY_VERSION}
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPOSITORY}/${_IMAGE_NAME}:$COMMIT_SHA
+
+artifacts:
+  objects:
+    location: gs://${_ARTIFACT_BUCKET}/$BUILD_ID/
+    paths:
+      - /workspace/sbom.spdx.json
+      - /workspace/trivy.sarif
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  substitution_option: ALLOW_LOOSE
+

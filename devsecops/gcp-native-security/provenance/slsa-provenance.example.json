@@ -1,0 +1,30 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "subject": [
+    {
+      "name": "us-central1-docker.pkg.dev/example-project/secure-docker-repo/my-app",
+      "digest": {
+        "sha256": "exampledigest000000000000000000000000000000000000000000000000000000"
+      }
+    }
+  ],
+  "predicate": {
+    "buildDefinition": {
+      "buildType": "https://cloud.google.com/build",
+      "externalParameters": {
+        "repository": "example-org/cybersecurity-demos",
+        "ref": "refs/heads/main"
+      }
+    },
+    "runDetails": {
+      "builder": {
+        "id": "https://cloudbuild.googleapis.com/projects/example-project/locations/global"
+      },
+      "metadata": {
+        "invocationId": "cloud-build-id-placeholder"
+      }
+    }
+  }
+}
+

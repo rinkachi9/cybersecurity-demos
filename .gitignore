@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Terraform / OpenTofu
+.terraform/
+terraform.tfstate
+terraform.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+
+# Local tooling
+.env
+.env.*
+!.env.example
+.DS_Store
+.agents
+.codex

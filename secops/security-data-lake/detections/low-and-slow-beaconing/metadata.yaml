@@ -1,0 +1,16 @@
+id: gcp-low-and-slow-beaconing
+name: Low-and-Slow Network Beaconing
+severity: high
+status: production-candidate
+data_sources:
+  - VPC Flow Logs
+mitre_attack:
+  - T1071
+  - T1105
+false_positives:
+  - Monitoring agents calling external APIs at fixed intervals.
+  - Package mirrors or update checks.
+tuning:
+  active_minutes: "> 10"
+  packet_variability: "< 1.5"
+

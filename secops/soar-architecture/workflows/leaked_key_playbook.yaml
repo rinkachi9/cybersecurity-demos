@@ -7,10 +7,11 @@ main:
   steps:
     - init:
         assign:
-          - finding: ${base64.decode(event.data.message.data)}
+          - finding: ${json.decode(base64.decode(event.data.message.data))}
           - resource_name: ${finding.finding.resourceName}
           - severity: ${finding.finding.severity}
           - project_id: ${sys.get_env("GOOGLE_CLOUD_PROJECT_ID")}
+          - dry_run: ${sys.get_env("SOAR_DRY_RUN") != "false"}
     
     # Step 1: Enrichment (Call a Cloud Function to check key usage logs)
     # Why? We don't want to revoke a key that is actively used in Production unless critical.
@@ -22,6 +23,11 @@ main:
             type: OIDC
           body:
             resource_name: ${resource_name}
+            severity: ${severity}
+            active_usage: ${default(finding.active_usage, true)}
+            suspicious_source: ${default(finding.suspicious_source, true)}
+            source_ip: ${default(finding.source_ip, "203.0.113.5")}
+            dry_run: ${dry_run}
         result: enrichment_result
 
     # Step 2: Decision Logic (The "Brain" of the SOAR)
@@ -47,6 +53,7 @@ main:
           body:
             action: "DISABLE_KEY"
             resource_name: ${resource_name}
+            dry_run: ${dry_run}
         result: remediation_status
         next: notify_soc
 
@@ -60,4 +67,4 @@ main:
 
     # Final Step: Notification
     - notify_soc:
-        return: ${"CRITICAL ALERT: " + resource_name + " was automatically disabled due to high risk score."}
+        return: ${"CRITICAL ALERT: " + resource_name + " remediation path executed. dry_run=" + string(dry_run)}

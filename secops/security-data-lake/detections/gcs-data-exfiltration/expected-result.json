@@ -1,0 +1,9 @@
+[
+  {
+    "actor": "data-exporter@example.iam.gserviceaccount.com",
+    "bucket": "sensitive-research-data",
+    "total_bytes_transferred_min": 1000000001,
+    "expected_severity": "high"
+  }
+]
+

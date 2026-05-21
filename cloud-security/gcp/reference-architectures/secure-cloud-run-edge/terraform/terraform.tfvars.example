@@ -1,0 +1,19 @@
+project_id      = "security-lab-12345"
+region          = "us-central1"
+service_name    = "secure-cloud-run-edge"
+container_image = "us-docker.pkg.dev/cloudrun/container/hello:1.0"
+runtime_service_account_id = "cloud-run-edge-runtime"
+
+domain_names = [
+  "app.example.com",
+]
+
+iap_oauth2_client_id     = "example-client-id.apps.googleusercontent.com"
+iap_oauth2_client_secret = "replace-with-secret-manager-or-tfvars"
+
+iap_members = [
+  "group:security-team@example.com",
+]
+
+runtime_service_account_roles = []
+enable_required_services      = false

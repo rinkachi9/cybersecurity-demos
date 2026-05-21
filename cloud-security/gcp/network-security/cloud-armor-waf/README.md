@@ -1,32 +1,112 @@
-# Cloud Armor: Edge Security & WAF (Full Stack)
+# Cloud Armor WAF: Edge Security Policy
 
-This module presents a complete, production-ready architecture for protecting web applications in Google Cloud. This is a comprehensive **Defense in Depth** ecosystem.
+This module provides a reusable Google Cloud Armor security policy for HTTP(S) Load Balancer backends. It is designed as a productized Terraform baseline that can be attached to Cloud Run, GKE, Compute Engine, or other compatible backend services.
 
-## 🏗️ Architectural Components
+## Security goal
 
-1.  **Global HTTP(S) Load Balancer**: Acts as the entry point (Anycast IP) that receives traffic globally and routes it to the nearest Google region.
-2.  **Cloud Armor Security Policy**: An "enhanced WAF" that filters traffic using preconfigured OWASP rules.
-3.  **Serverless Network Endpoint Group (NEG)**: A secure way to connect Cloud Run applications to the Load Balancer.
-4.  **Ingress: Internal-and-Cloud-Load-Balancing**: A critical Cloud Run configuration that prevents direct connections to the `*.a.run.app` address. All traffic must pass through the WAF.
+The policy reduces application-layer risk at the edge before traffic reaches the workload. It focuses on:
 
-## 🛡️ Advanced Features in this Demo
+- OWASP preconfigured WAF rules for SQL injection, XSS, LFI/path traversal, and RCE probes.
+- Source IP rate limiting with optional rate-based ban.
+- Optional bot management challenge rule.
+- Adaptive Protection for L7 DDoS signal generation.
+- Safe rollout through preview mode for selected rules.
 
-### 1. Preconfigured WAF Rules
-- `sqli-v33-stable`: Detects and blocks SQL Injection (e.g., `' OR 1=1`).
-- `xss-v33-stable`: Detects and blocks Cross-Site Scripting (e.g., `<script>`).
+## Threat model
 
-### 2. Rate Limiting (Brute Force Protection)
-We implemented a rule that limits requests to **100 per minute per IP**. If this limit is exceeded, the user receives a `429 Too Many Requests` error. This is effective protection against scraping and simple DDoS attacks.
+| Abuse case | Control |
+| --- | --- |
+| SQL injection against public endpoints | `sqli-v33-stable` preconfigured WAF rule |
+| Reflected or stored XSS probe | `xss-v33-stable` preconfigured WAF rule |
+| Path traversal or local file inclusion | `lfi-v33-stable` preconfigured WAF rule |
+| Remote command payloads | `rce-v33-stable` preconfigured WAF rule |
+| Brute force, scraping, or basic L7 flood | Cloud Armor rate limiting |
+| Suspicious automation | Optional bot management challenge |
+| L7 DDoS trend | Adaptive Protection |
 
-### 3. IP Logging & Monitoring
-All blocked requests are logged in Cloud Logging. You can filter them with:
-`jsonPayload.enforcedSecurityPolicy.name="secure-edge-waf"`
+## Architecture
 
-## 🛠️ How to Verify?
-After deploying the infrastructure (Terraform), use the `verify_waf.py` script:
-```bash
-python verify_waf.py <YOUR_LOAD_BALANCER_IP>
+```text
+Internet
+  -> Global HTTP(S) Load Balancer
+  -> Cloud Armor security policy
+  -> Backend service
+  -> Cloud Run, GKE, Compute Engine, or other backend
 ```
 
----
-*Reference: [GCP Cloud Armor Overview](https://cloud.google.com/armor)*
+For a complete Cloud Run implementation, see [Secure Cloud Run Edge](../../reference-architectures/secure-cloud-run-edge/README.md).
+
+## Terraform baseline
+
+The module is structured as reusable IaC:
+
+```text
+terraform/
+  versions.tf
+  variables.tf
+  main.tf
+  outputs.tf
+  terraform.tfvars.example
+examples/
+  minimal/
+```
+
+Minimal example:
+
+```bash
+cd cloud-security/gcp/network-security/cloud-armor-waf/examples/minimal
+terraform init
+terraform plan -var="project_id=demo-security-sandbox"
+```
+
+The module outputs `security_policy_self_link`, which should be attached to a compatible backend service.
+
+## Important variables
+
+| Variable | Purpose |
+| --- | --- |
+| `policy_name` | Cloud Armor security policy name |
+| `enable_adaptive_protection` | Enables L7 DDoS Adaptive Protection |
+| `enable_rate_limiting` | Adds source IP throttling |
+| `enable_rate_based_ban` | Uses temporary bans instead of only throttling |
+| `preconfigured_waf_rules_preview` | Runs OWASP WAF rules in preview mode before enforcement |
+| `enable_bot_management` | Adds optional reCAPTCHA bot challenge rule |
+| `custom_rules` | Adds additional CEL expressions with explicit priorities |
+
+## Verification
+
+Static local contract check:
+
+```bash
+python3 cloud-security/gcp/network-security/cloud-armor-waf/tests/verify_policy_contract.py
+```
+
+Runtime WAF check after attaching the policy to a load balancer:
+
+```bash
+python3 cloud-security/gcp/network-security/cloud-armor-waf/verify_waf.py https://example-lb.example.com
+```
+
+Expected runtime behavior:
+
+- benign request returns `200`,
+- SQLi, XSS, path traversal, and RCE probes return `403`,
+- aggressive traffic eventually returns `429` if rate limiting is triggered.
+
+## Evidence
+
+Collect evidence in [evidence/](./evidence/README.md):
+
+- `terraform validate` or OpenTofu equivalent output,
+- `terraform plan` output with sensitive values redacted,
+- backend service attachment proof,
+- verifier output,
+- Cloud Logging query for denied requests,
+- cleanup proof when tested in a paid project.
+
+## Costs and limitations
+
+- Cloud Armor policy configuration is low cost, but request processing, logging, Load Balancer usage, and Adaptive Protection tiering may incur cost.
+- Bot management may require Cloud Armor Enterprise and reCAPTCHA Enterprise readiness.
+- Preview mode should be used for new custom rules until false positives are understood.
+- This module creates the policy only; it does not create the load balancer or backend service.

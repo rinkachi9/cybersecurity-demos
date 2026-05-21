@@ -1,0 +1,31 @@
+id: gcp-native-supply-chain-security
+title: GCP Native Secure Supply Chain
+domain: devsecops
+level: advanced
+status: productized-iac-and-supply-chain-baseline
+estimated_cost: low
+tools:
+  - cloud-build
+  - artifact-registry
+  - syft
+  - trivy
+  - binary-authorization
+standards:
+  - SLSA
+  - NIST SSDF
+  - SOC2
+controls:
+  - sbom generation
+  - vulnerability scanning
+  - artifact registry
+  - binary authorization
+  - attestation
+  - provenance
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Add deploy admission policy test.
+  - Add generated Cloud Build provenance evidence from a real build.
+  - Add protected branch evidence and CODEOWNERS review proof.

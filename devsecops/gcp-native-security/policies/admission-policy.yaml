@@ -1,0 +1,28 @@
+apiVersion: security.rinkachi.dev/v1
+kind: SupplyChainAdmissionPolicy
+metadata:
+  name: secure-container-release
+spec:
+  artifact:
+    required_tag: COMMIT_SHA
+    require_digest_reference: true
+  sbom:
+    required: true
+    format: spdx-json
+  vulnerability_scan:
+    required: true
+    scanner: trivy
+    block_severities:
+      - HIGH
+      - CRITICAL
+  provenance:
+    required: true
+    predicate_type: https://slsa.dev/provenance/v1
+  attestation:
+    required: true
+    provider: binary-authorization
+    attestor: vulnerability-attestor
+  deployment:
+    default_admission: deny
+    allow_only_attested_images: true
+

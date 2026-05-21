@@ -1,0 +1,28 @@
+id: gcp-gke-security
+title: GKE Network Segmentation and Service Mesh Security
+domain: cloud-security
+level: advanced
+status: demo-manifests
+estimated_cost: medium
+tools:
+  - kubectl
+  - terraform
+  - gcloud
+standards:
+  - CIS Kubernetes Benchmark
+  - NIST CSF
+  - PCI-DSS
+controls:
+  - network policies
+  - workload identity
+  - service mesh mtls
+  - binary authorization
+validation:
+  automated: false
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add sample frontend/backend workloads.
+  - Add network policy connectivity tests.
+  - Add mTLS verification evidence.
+

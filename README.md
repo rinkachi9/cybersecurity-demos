@@ -6,6 +6,52 @@ Welcome to the **Cybersecurity Demos** repository. This is a comprehensive portf
 
 ---
 
+## Project Operating Model
+
+This repository is being developed as an executable expert portfolio, not only a documentation collection. The current roadmap and quality standards are tracked here:
+
+*   **[Expert Roadmap](./ROADMAP.md)**: staged plan for taking the project from advanced demo collection to expert-grade security engineering portfolio.
+*   **[Project Assessment](./docs/project-assessment.md)**: current-state analysis, strengths, gaps, risks, and prioritization.
+*   **[Module Standard](./docs/module-standard.md)**: target structure and readiness criteria for every demo module.
+*   **[Module Status Matrix](./docs/module-status.md)**: current maturity and next expert upgrade for each module.
+*   **[Portfolio Showcase](./docs/showcase.md)**: 5/30/60/90 minute presentation paths for technical review.
+*   **[Evidence Matrix](./docs/evidence-matrix.md)**: proof levels and the attack -> control -> detection -> response -> evidence chain.
+*   **[Demo Script](./docs/demo-script.md)** and **[Quickstart](./docs/quickstart.md)**: dry-run review flow that does not require Docker or GCP deployment.
+*   **[Final Acceptance](./docs/final-acceptance.md)**: final static baseline and runtime evidence boundary.
+*   **[Decision Records](./docs/decision-records/README.md)**: concise rationale for key architecture choices.
+
+Lightweight validation can be run with:
+
+```bash
+python3 scripts/audit/validate_repository.py
+```
+
+The validator now checks Python syntax, local Markdown links, Terraform structure, required project files, productized module contracts, detection-as-code, supply-chain artifacts, portfolio documentation, and the baseline module metadata contract.
+
+The first Terraform module promoted to the productized baseline is **[Workload Identity Federation](./cloud-security/gcp/iam-hardening/workload-identity-federation/README.md)**.
+
+The next reusable Terraform control promoted to the productized baseline is **[Cloud Armor WAF](./cloud-security/gcp/network-security/cloud-armor-waf/README.md)**.
+
+The next data-exfiltration control promoted to productized dry-run IaC is **[VPC Service Controls](./cloud-security/gcp/network-security/vpc-service-controls/README.md)**.
+
+The next network detection control promoted to productized IaC is **[Cloud IDS](./cloud-security/gcp/network-security/cloud-ids/README.md)** with Service Networking, packet mirroring, and SCC evidence guidance.
+
+The first web workshop promoted to the automated baseline is **[OWASP Top 10 Lab](./web-security/owasp-top-10/README.md)**.
+
+The first full GCP reference architecture baseline is **[Secure Cloud Run Edge](./cloud-security/gcp/reference-architectures/secure-cloud-run-edge/README.md)**.
+
+The first SecOps baseline promoted to detection-as-code and dry-run response is **[Security Data Lake + SOAR](./secops/security-data-lake/README.md)**.
+
+The next SecOps IaC baseline promoted to productized Terraform is **[Security Data Lake](./secops/security-data-lake/README.md)** with scoped log sinks and optional scheduled detections.
+
+The first supply-chain baseline promoted to SBOM/provenance/attestation is **[GCP Native Supply Chain Security](./devsecops/gcp-native-security/README.md)**.
+
+The portfolio layer promoted in Stage 8 is **[Portfolio Showcase](./docs/showcase.md)** with evidence mapping, demo script, quickstart, cost boundaries, and architecture decision records.
+
+The final static baseline is documented in **[Final Acceptance](./docs/final-acceptance.md)**. Runtime production claims still require redacted evidence from isolated Docker/GCP/Terraform executions.
+
+---
+
 ## 🏆 Compliance Mapping (Standards & Compliance)
 
 As a Senior Security Architect, I emphasize aligning technical solutions with specific regulatory and business requirements.
@@ -39,6 +85,7 @@ The repository is organized into six main domains:
 *   **[IAM & Resource Access Management](./cloud-security/gcp/iam-hardening/README.md)**: Custom Roles, Group-based access, and the Principle of Least Privilege (PoLP).
 *   **[Governance: Organization Policies](./cloud-security/gcp/governance/README.md)**: Enterprise-wide guardrails enforcing security standards.
 *   **[Network Security](./cloud-security/gcp/network-security/README.md)**: Cloud Firewall, Cloud Armor WAF, IAP, VPC Service Controls, Cloud IDS, and Packet Mirroring.
+*   **[Reference Architectures](./cloud-security/gcp/reference-architectures/README.md)**: End-to-end secure deployment patterns such as Cloud Run behind Load Balancer, Cloud Armor, and IAP.
 *   **[Incident Response: Self-Healing](./cloud-security/gcp/incident-response/README.md)**: Automated remediation of SCC findings.
 *   **[GKE Security: mTLS & Network Policies](./cloud-security/gcp/gke-security/README.md)**: Microservices security using Service Mesh (Istio/ASM).
 *   **[Data: Cloud DLP API](./cloud-security/gcp/data-security/cloud-dlp-demo/README.md)**: Automated PII identification and masking.

@@ -1,0 +1,19 @@
+detections:
+  - id: gcp-brute-force-login
+    path: brute-force-login
+    severity: medium
+    mitre_attack:
+      - T1110
+  - id: gcp-low-and-slow-beaconing
+    path: low-and-slow-beaconing
+    severity: high
+    mitre_attack:
+      - T1071
+      - T1105
+  - id: gcp-gcs-data-exfiltration
+    path: gcs-data-exfiltration
+    severity: high
+    mitre_attack:
+      - T1530
+      - T1041
+

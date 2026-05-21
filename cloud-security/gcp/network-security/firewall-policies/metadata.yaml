@@ -1,0 +1,26 @@
+id: gcp-firewall-policies
+title: Hierarchical Firewall Policies and Identity-Based Rules
+domain: cloud-security
+level: advanced
+status: demo-iac
+estimated_cost: none
+tools:
+  - terraform
+  - gcloud
+standards:
+  - CIS GCP Benchmark
+  - NIST CSF
+  - PCI-DSS
+controls:
+  - hierarchical firewall policies
+  - identity-based firewall rules
+  - default deny ingress
+  - firewall logging
+validation:
+  automated: false
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add connectivity test matrix.
+  - Add firewall log query examples.
+  - Add break-glass exception workflow.

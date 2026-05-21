@@ -1,0 +1,31 @@
+id: gcp-secure-cloud-run-edge
+title: Secure Cloud Run Edge Reference Architecture
+domain: cloud-security
+level: expert
+status: reference-architecture-baseline
+estimated_cost: medium
+tools:
+  - terraform
+  - gcloud
+  - python
+standards:
+  - OWASP ASVS
+  - NIST CSF
+  - CIS GCP Benchmark
+  - SOC2
+controls:
+  - cloud run restricted ingress
+  - cloud armor waf
+  - identity-aware proxy
+  - https load balancer
+  - least privilege runtime identity
+  - edge logging
+validation:
+  automated: partial
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Add deployed runtime evidence from a test project.
+  - Add managed certificate provisioning notes after a real domain test.
+  - Add Cloud Logging alert policies for WAF and IAP denies.
+

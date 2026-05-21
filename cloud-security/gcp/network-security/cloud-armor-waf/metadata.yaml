@@ -1,0 +1,29 @@
+id: gcp-cloud-armor-waf
+title: Cloud Armor WAF and Edge Protection
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: low
+tools:
+  - terraform
+  - gcloud
+  - python
+standards:
+  - OWASP Top 10 2021
+  - NIST CSF
+  - PCI-DSS
+controls:
+  - preconfigured WAF rules
+  - rate limiting
+  - adaptive protection
+  - edge logging
+  - preview-mode rollout
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Capture terraform validate and plan evidence from an isolated project.
+  - Capture blocked SQLi and XSS log samples.
+  - Attach the policy to Secure Cloud Run Edge and collect runtime verifier output.
+  - Add alerting policy for enforced Cloud Armor deny events.

@@ -1,0 +1,13 @@
+{
+  "finding": {
+    "resourceName": "projects/-/serviceAccounts/compromised@example.iam.gserviceaccount.com/keys/abc123",
+    "severity": "CRITICAL",
+    "category": "LEAKED_SERVICE_ACCOUNT_KEY",
+    "state": "ACTIVE"
+  },
+  "source_ip": "203.0.113.5",
+  "active_usage": true,
+  "suspicious_source": true,
+  "dry_run": true
+}
+

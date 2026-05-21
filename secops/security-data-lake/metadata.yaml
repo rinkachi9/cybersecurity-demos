@@ -1,0 +1,31 @@
+id: gcp-security-data-lake
+title: Security Data Lake and Detection Engineering
+domain: secops
+level: expert
+status: productized-iac-and-detection-baseline
+estimated_cost: medium
+tools:
+  - terraform
+  - bigquery
+  - sql
+standards:
+  - NIST CSF
+  - SOC2
+  - MITRE ATTACK
+controls:
+  - centralized log sink
+  - scoped log sink deployment
+  - BigQuery dataset IAM for sink writer identity
+  - optional scheduled queries
+  - detection engineering
+  - anomaly hunting
+  - security analytics
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: true
+next_upgrade:
+  - Capture terraform validate and plan evidence from an isolated project.
+  - Deploy scheduled detections after query cost review.
+  - Add local query tests with synthetic tables.
+  - Add alert export into SOAR trigger format.

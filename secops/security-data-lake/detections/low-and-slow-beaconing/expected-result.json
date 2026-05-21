@@ -1,0 +1,10 @@
+[
+  {
+    "src_vm": "10.10.1.15",
+    "dest_ip": "198.51.100.77",
+    "active_minutes_min": 11,
+    "packet_variability_max": 1.5,
+    "expected_severity": "high"
+  }
+]
+

@@ -1,0 +1,28 @@
+id: github-actions-devsecops-pipeline
+title: GitHub Actions DevSecOps Golden Path
+domain: devsecops
+level: advanced
+status: pipeline-template
+estimated_cost: none
+tools:
+  - github-actions
+  - gitleaks
+  - checkov
+  - trivy
+standards:
+  - NIST SSDF
+  - SLSA
+  - OWASP SAMM
+controls:
+  - secret scanning
+  - iac scanning
+  - dependency scanning
+  - sast
+validation:
+  automated: partial
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Pin third-party actions by commit SHA.
+  - Upload SARIF results.
+  - Add OIDC deploy job to GCP.

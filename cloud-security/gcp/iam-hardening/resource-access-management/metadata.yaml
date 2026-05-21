@@ -1,0 +1,26 @@
+id: gcp-resource-access-management
+title: IAM Resource Access Management
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: none
+tools:
+  - terraform
+  - gcloud
+standards:
+  - CIS GCP Benchmark
+  - SOC2
+  - PCI-DSS
+controls:
+  - custom roles
+  - group-based access
+  - conditional iam
+  - least privilege
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add IAM policy validation examples.
+  - Add access review runbook.
+  - Capture access review evidence from a sandbox project.

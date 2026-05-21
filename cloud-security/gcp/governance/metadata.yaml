@@ -1,0 +1,26 @@
+id: gcp-governance-organization-policies
+title: Governance as Code with Organization Policies
+domain: cloud-security
+level: advanced
+status: productized-iac-baseline
+estimated_cost: none
+tools:
+  - terraform
+  - gcloud
+standards:
+  - CIS GCP Benchmark
+  - NIST CSF
+  - SOC2
+controls:
+  - organization policies
+  - guardrails
+  - default network prevention
+  - service account key restrictions
+validation:
+  automated: true
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Add exception workflow.
+  - Add policy verification commands.
+  - Capture dry-run or sandbox policy evidence.

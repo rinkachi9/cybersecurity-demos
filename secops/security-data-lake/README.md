@@ -55,11 +55,68 @@ Traditional SIEMs often charge by the volume of data ingested. BigQuery allows y
 2.  **BigQuery Dataset**: Secure, partitioned, and clustered storage for petabytes of security data.
 3.  **SQL Detection Rules**: Production-ready queries for finding Brute Force, Beaconing, and Data Exfiltration.
 
+## Terraform baseline
+
+The module now provides a productized Terraform baseline:
+
+```text
+terraform/
+  versions.tf
+  variables.tf
+  main.tf
+  outputs.tf
+  terraform.tfvars.example
+examples/
+  minimal/
+```
+
+Supported deployment shapes:
+
+- project-level log sink for sandbox review,
+- folder-level log sink for controlled platform teams,
+- organization-level log sink for centralized SecOps,
+- BigQuery dataset IAM binding for the generated sink writer identity,
+- optional BigQuery scheduled detections based on the detection-as-code SQL files.
+
+Minimal review path:
+
+```bash
+python3 secops/security-data-lake/tests/verify_terraform_contract.py
+cd secops/security-data-lake/examples/minimal
+terraform init
+terraform plan -var="project_id=demo-security-sandbox"
+```
+
+Do not enable scheduled detections until exported log tables exist and query cost has been reviewed.
+
+## Detection-as-Code Layout
+
+Detections are now structured under [detections/](./detections/):
+
+```text
+detections/
+  manifest.yaml
+  detection-name/
+    README.md
+    metadata.yaml
+    query.sql
+    sample-events.json
+    expected-result.json
+```
+
+The current baseline includes:
+
+- [Brute Force Login Attempts](./detections/brute-force-login/README.md)
+- [Low-and-Slow Network Beaconing](./detections/low-and-slow-beaconing/README.md)
+- [Large GCS Data Exfiltration](./detections/gcs-data-exfiltration/README.md)
+
 ## 🛠️ How to Implement?
-1. Deploy the BigQuery dataset and Log Sink with Terraform (`terraform apply`).
-2. Wait for logs to populate (e.g., Cloud Audit, VPC Flow).
-3. Run the SQL queries in the **BigQuery console** to find potential threats.
-4. (Advanced) Connect a **Cloud Workflow** to the BigQuery result to trigger an automated SOAR response (see the [SOAR module](../soar-architecture/README.md)).
+1. Run the local contract check.
+2. Review `terraform/terraform.tfvars.example` and choose `sink_scope`.
+3. Deploy the BigQuery dataset and Log Sink with Terraform in an isolated project or folder.
+4. Wait for logs to populate, for example Cloud Audit, VPC Flow, WAF, and IDS logs.
+5. Run the SQL queries in BigQuery or enable scheduled detections after query cost review.
+6. Connect high-confidence alerts to the [SOAR module](../soar-architecture/README.md).
 
 ---
 *Reference: [GCP Security Log Analysis with BigQuery](https://cloud.google.com/architecture/security-log-analytics)*

@@ -39,6 +39,20 @@ The entire architecture scales to zero. You pay nothing when there are no alerts
 2.  **Orchestration**: A `main.yaml` playbook that enriches data and makes decisions based on risk score.
 3.  **Enrichment Worker**: A Python function that simulates checking Threat Intel (e.g., VirusTotal).
 4.  **Remediation Worker**: A Python function that uses the IAM API to disable the compromised key.
+5.  **Dry-Run Safety**: Remediation defaults to `dry_run=true`, so tests can prove the decision path without disabling real keys.
+
+## 🧪 Local Dry-Run Test
+
+Run the local worker checks without deploying to Google Cloud:
+
+```bash
+python3 tests/test_dry_run.py
+```
+
+Sample events and expected outcomes live in:
+
+- [sample-events/](./sample-events/)
+- [expected-results/](./expected-results/)
 
 ## 🛠️ How to Deploy?
 1. Deploy the infrastructure with Terraform (`terraform apply`).

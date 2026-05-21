@@ -1,0 +1,21 @@
+id: module-id
+title: Human-readable module title
+domain: cloud-security
+level: advanced
+status: planned
+estimated_cost: low
+tools:
+  - terraform
+  - gcloud
+standards:
+  - NIST CSF
+  - CIS GCP Benchmark
+controls:
+  - example-control
+validation:
+  automated: false
+  evidence_required: true
+  runbook_required: false
+next_upgrade:
+  - Replace this list with the next concrete implementation steps.
+

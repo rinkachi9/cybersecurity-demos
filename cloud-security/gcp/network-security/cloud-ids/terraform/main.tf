@@ -1,41 +1,69 @@
-# GCP Cloud IDS: Network-level Intrusion Detection
-# This setup creates a Cloud IDS endpoint and mirrors VPC traffic for inspection.
+locals {
+  network_self_link = var.network_self_link != "" ? var.network_self_link : "projects/${var.project_id}/global/networks/${var.network_name}"
+  ids_location      = var.ids_location != "" ? var.ids_location : "${var.region}-a"
 
-# 1. Private Service Connection (Required for Cloud IDS)
-# IDS runs in a Google-managed project and connects back to your VPC.
-resource "google_compute_global_address" "ids_range" {
-  name          = "ids-peering-address"
+  required_services = toset([
+    "cloudids.googleapis.com",
+    "compute.googleapis.com",
+    "servicenetworking.googleapis.com",
+  ])
+
+  reserved_peering_ranges = var.create_reserved_peering_range ? [google_compute_global_address.ids_peering_range[0].name] : var.existing_reserved_peering_ranges
+}
+
+resource "google_project_service" "required" {
+  for_each = var.enable_required_services ? local.required_services : toset([])
+
+  project            = var.project_id
+  service            = each.key
+  disable_on_destroy = false
+}
+
+resource "google_compute_global_address" "ids_peering_range" {
+  count = var.create_reserved_peering_range ? 1 : 0
+
+  project       = var.project_id
+  name          = var.private_service_range_name
   purpose       = "VPC_PEERING"
   address_type  = "INTERNAL"
-  prefix_length = 16
-  network       = "projects/YOUR_PROJECT_ID/global/networks/YOUR_VPC"
+  prefix_length = var.private_service_range_prefix_length
+  network       = local.network_self_link
+
+  depends_on = [google_project_service.required]
 }
 
-resource "google_service_networking_connection" "ids_peering" {
-  network                 = "projects/YOUR_PROJECT_ID/global/networks/YOUR_VPC"
+resource "google_service_networking_connection" "ids_private_service_connection" {
+  count = var.enable_private_service_connection ? 1 : 0
+
+  network                 = local.network_self_link
   service                 = "servicenetworking.googleapis.com"
-  reserved_peering_ranges = [google_compute_global_address.ids_range.name]
+  reserved_peering_ranges = local.reserved_peering_ranges
+
+  depends_on = [google_compute_global_address.ids_peering_range]
 }
 
-# 2. Cloud IDS Endpoint
-# Powered by Palo Alto Networks signatures.
 resource "google_cloud_ids_endpoint" "ids_endpoint" {
-  name     = "corporate-ids-endpoint"
-  location = "us-central1-a"
-  network  = "projects/YOUR_PROJECT_ID/global/networks/YOUR_VPC"
-  severity = "MEDIUM" # Log all threats above Medium severity
+  project     = var.project_id
+  name        = var.endpoint_name
+  location    = local.ids_location
+  network     = local.network_self_link
+  severity    = var.minimum_threat_severity
+  description = var.endpoint_description
+  labels      = var.labels
 
-  depends_on = [google_service_networking_connection.ids_peering]
+  depends_on = [google_service_networking_connection.ids_private_service_connection]
 }
 
-# 3. Packet Mirroring Policy
-# Mirrors traffic from a specific subnet or tags to the IDS endpoint.
 resource "google_compute_packet_mirroring" "mirror_to_ids" {
-  name        = "ids-mirror-policy"
-  description = "Mirror all traffic to the IDS endpoint for deep packet inspection"
-  region      = "us-central1"
+  count = var.enable_packet_mirroring ? 1 : 0
+
+  project     = var.project_id
+  name        = var.packet_mirroring_policy_name
+  description = var.packet_mirroring_policy_description
+  region      = var.region
+
   network {
-    url = "projects/YOUR_PROJECT_ID/global/networks/YOUR_VPC"
+    url = local.network_self_link
   }
 
   collector_ilb {
@@ -43,19 +71,32 @@ resource "google_compute_packet_mirroring" "mirror_to_ids" {
   }
 
   mirrored_resources {
-    subnetworks {
-      url = "projects/YOUR_PROJECT_ID/regions/us-central1/subnetworks/YOUR_SUBNET"
+    dynamic "subnetworks" {
+      for_each = var.mirrored_subnetwork_self_links
+      iterator = subnetwork
+
+      content {
+        url = subnetwork.value
+      }
     }
-    # Alternatively, mirror specific tags
-    # tags = ["secure-app"]
+
+    dynamic "instances" {
+      for_each = var.mirrored_instance_self_links
+      iterator = instance
+
+      content {
+        url = instance.value
+      }
+    }
+
+    tags = var.mirrored_tags
   }
 
   filter {
-    ip_protocols = ["tcp", "udp", "icmp"]
-    direction    = "BOTH" # Inspect ingress and egress
+    ip_protocols = var.mirrored_ip_protocols
+    cidr_ranges  = var.mirrored_cidr_ranges
+    direction    = var.mirroring_direction
   }
-}
 
-output "ids_endpoint_name" {
-  value = google_cloud_ids_endpoint.ids_endpoint.name
+  depends_on = [google_cloud_ids_endpoint.ids_endpoint]
 }

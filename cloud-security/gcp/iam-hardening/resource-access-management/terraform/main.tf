@@ -1,63 +1,43 @@
-# GCP Advanced IAM: Custom Roles, Groups, and Least Privilege
-# This setup demonstrates managing identities and access at an enterprise level.
-
-# 1. Custom Role Creation
-# Predefined roles are often too broad. Senior architects create custom roles 
-# to follow the Principle of Least Privilege (PoLP).
 resource "google_project_iam_custom_role" "security_auditor_custom" {
-  role_id     = "corporateSecurityAuditor"
-  title       = "Corporate Security Auditor (Custom)"
-  description = "A granular role for security auditing with read-only access to critical logs and configs."
-  permissions = [
-    "compute.instances.get",
-    "compute.instances.list",
-    "storage.buckets.get",
-    "storage.buckets.getIamPolicy",
-    "logging.logEntries.list",
-    "iam.roles.get",
-    "resourcemanager.projects.getIamPolicy"
-  ]
+  project     = var.project_id
+  role_id     = var.custom_role_id
+  title       = var.custom_role_title
+  description = "Least-privilege read-only role for security auditing."
+  permissions = var.custom_role_permissions
 }
 
-# 2. IAM Binding for a Security Group
-# NOTE: In a real environment, groups are usually managed via Cloud Identity or Google Workspace.
-# This binding grants the custom role to an entire group of users.
 resource "google_project_iam_member" "group_auditor_binding" {
-  project = "YOUR_PROJECT_ID"
+  project = var.project_id
   role    = google_project_iam_custom_role.security_auditor_custom.id
-  member  = "group:security-auditors@yourdomain.com"
+  member  = var.security_auditor_group
 }
 
-# 3. IAM Member for an Individual User (Standard Role)
-# Granting a predefined role to a specific user for operational tasks.
-resource "google_project_iam_member" "user_compute_viewer" {
-  project = "YOUR_PROJECT_ID"
+resource "google_project_iam_member" "compute_viewers" {
+  for_each = var.compute_viewer_members
+
+  project = var.project_id
   role    = "roles/compute.viewer"
-  member  = "user:john.doe@yourdomain.com"
+  member  = each.value
 }
 
-# 4. Resource-Level IAM (Granular Access)
-# Instead of project-wide access, we grant permission only to a specific resource (e.g., a GCS Bucket).
-resource "google_storage_bucket_iam_member" "specific_bucket_reader" {
-  bucket = "your-sensitive-data-bucket"
+resource "google_storage_bucket_iam_member" "specific_bucket_readers" {
+  for_each = var.bucket_reader_members
+
+  bucket = var.sensitive_bucket_name
   role   = "roles/storage.objectViewer"
-  member = "group:data-analysts@yourdomain.com"
+  member = each.value
 }
 
-# 5. Conditional IAM (Context-Aware Access)
-# Grant access only if a specific condition is met (e.g., specific time or request IP).
 resource "google_project_iam_member" "temporary_dev_access" {
-  project = "YOUR_PROJECT_ID"
+  for_each = var.temporary_compute_admin_members
+
+  project = var.project_id
   role    = "roles/compute.admin"
-  member  = "user:dev-on-call@yourdomain.com"
+  member  = each.value
 
   condition {
     title       = "Expiring access"
-    description = "Expires at the end of 2026"
-    expression  = "request.time < timestamp("2027-01-01T00:00:00Z")"
+    description = "Temporary break-glass access with explicit expiry"
+    expression  = "request.time < timestamp(\"${var.temporary_access_expires_at}\")"
   }
-}
-
-output "custom_role_name" {
-  value = google_project_iam_custom_role.security_auditor_custom.name
 }

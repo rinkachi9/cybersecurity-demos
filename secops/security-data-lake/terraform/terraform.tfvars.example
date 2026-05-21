@@ -1,0 +1,26 @@
+project_id = "demo-security-sandbox"
+location   = "US"
+
+dataset_id                 = "security_data_lake"
+delete_contents_on_destroy = false
+
+sink_scope      = "project"
+sink_project_id = "demo-security-sandbox"
+sink_name       = "centralized-security-logs-sink"
+
+enable_required_services   = false
+enable_scheduled_detections = false
+
+enabled_detection_ids = [
+  "brute_force_login",
+  "low_and_slow_beaconing",
+  "gcs_data_exfiltration",
+]
+
+detection_schedule = "every 1 hours"
+
+labels = {
+  domain      = "secops"
+  purpose     = "security-data-lake"
+  environment = "sandbox"
+}
